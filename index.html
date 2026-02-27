@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="GeoNarrative Template" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>GeoNarrative Template</title>
+  <!-- <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;1,400;1,500&display=swap" /> -->
+  <!-- <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css"> -->
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"> -->
+  <link rel="stylesheet" href="css/main.css">
+  <script src="https://unpkg.com/scrollama"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
+</head>
+
+<body>
+  <!-- loading a video cover page -->
+  <section id="cover" style="background: url('img/cover.jpeg') no-repeat center center;  background-size: cover;">
+    <div id="intro">
+      <h1>School Accessibility in Washington State and Seattle</h1>
+      <h5>A Geonarrative about Public and Private School Access and Educational Attainment</h5>
+      <p>
+        This project explores educational attainment disparities accross Washington State. 
+        It uses data on the percentage of people without a high school diploma in each census tract and the locations of public schools in 
+        Washington State to examine geographic disparities in access to education.  The analysis zooms into Seattle to futher explore the 
+        relationship between public school access and educational attainment. Private school location data in Seattle is also used to examime 
+        the relationship between geographic location and access to educational opportunities. This geonarrative focuses on geographic proximity
+        to educational resources and how it may correlate with a person's educational attainment.
+      </p>
+
+      <div class="footnote">
+        <span> Created by Margaret J.</span>
+      </div>
+    </div>
+  </section>
+  <!-- a geonarrative will have two major components, a storyboard and a script panel of a series of scenes/actions -->
+  <section id="geonarrative">
+    <!-- a storymap can present differnt types of objects, like map, chart, diagram, etc. -->
+    <div id="storyboard">
+      <!-- create the place holder element for map -->
+      <div id="map"></div>
+    </div>
+
+    <article class="scene" data-scene="0">
+      <h2>No High School Diploma Rankings by Census Tracts in Washington State</h2>
+      <p>This map shows the percentage of people in each census tract without a high school diploma.  
+        From what we can observe, there are significant disparities across the census tracts.
+        Many census tracts in Western Washington have higher percentages of people without a high school diploma, while census 
+        tracts near larger cities tend to have lower percentages. This suggests that geographic location may play a role in 
+        educational attainment.
+      </p>
+      <ul style="list-style: none; padding: 5px;">
+        <p>Percent without a High School Diploma</p>
+        <li><span style="display:inline-block; width:20px; height:20px; background-color:#f2f0f7; margin-right:5px;"></span> 0-4%</li>
+        <li><span style="display:inline-block; width:20px; height:20px; background-color:#cbc9e2; margin-right:5px;"></span> 5-9%</li>
+        <li><span style="display:inline-block; width:20px; height:20px; background-color:#9e9ac8; margin-right:5px;"></span> 10-24%</li>
+        <li><span style="display:inline-block; width:20px; height:20px; background-color:#756bb1; margin-right:5px;"></span> 25-49%</li>
+        <li><span style="display:inline-block; width:20px; height:20px; background-color:#54278f; margin-right:5px;"></span> 50%+</li>
+      </ul>
+    </article>
+    <article class="scene" data-scene="1">
+      <h2>Public School Locations in Washington State</h2>
+      <p>
+        Next, we look at the distribution of public schools in Washington State. Each red dot represents a public school. 
+        We can observe that public schools tend to be clustered in the areas with higher populations, while rural areas of the state have
+        fewer public schools. This raises the question: does the prevalence of public schools correlate with differences in educational attainment?
+      </p>
+      <div>
+        <p><i class="bi bi-geo-alt"></i> <span>2,498 Public Schools Located in Washington State</span>
+      </div>
+    </article>
+    <article class="scene" data-scene="2">
+      <h2>Public School Locations in Seattle</h2>
+      <p>
+        Now zooming into Seattle, we can see the public school distribution in Seattle.
+        There doesn't seem to be a clear pattern showing a relationship between public school distribution and percentage of people without a high school diploma. 
+        This shows that in cities with many public schools, access doesn't correlate with educational attainment.
+      </p>
+    </article>
+    <article class="scene" data-scene="3">
+      <h2>Private School Locations in Seattle</h2>
+      <p>
+        Next, we look at the distribution of private schools in Seattle. Each blue dot represents a private school. 
+        We now can see a pattern where private schools tend to be located in or near census tracts where there are lower
+        percentages of people without a high school diploma. This highlights how additional educational opportunities are
+        concentrated in areas with higher educational attainment.
+      </p>
+      <div>
+        <p><i class="bi bi-geo-alt"></i> <span> 74 Private Schools Located in Seattle</span>
+      </div>
+    </article>
+    <article class="scene" data-scene="4">
+      <h2>Public and Private School Locations in Seattle</h2>
+      <p>
+        Finally, we look at both public and private school locations in Seattle together. 
+        We can see how public schools are more evenly distributed across all census tracts, while private schools are 
+        located near census tracts with higher levels of educational attainment. This shows how geographic location likely has
+        impacts on a person's educational attainment with some areas having more access and resources than others.
+      </p>
+    </article>
+    <article class="scene fullscreen" data-scene="5">
+      <h2>Conclusion</h2>
+      <div class="scene-features">
+        <div class="feature-left">
+          <img src="/img/end.jpeg"/>
+        </div>
+        <div class="feature-right">
+          <div class="text-box">
+            <h3>Sources</h3>
+            <p>
+              No High School Diploma Rates -
+              <a href = "https://geo.wa.gov/datasets/fb5dc68a58c54f44887042b1f787bc82_0/about"> Washington Spatial Data</a>
+            </p>
+            <p>
+              Public School Locations -
+              <a href = "https://geo.wa.gov/datasets/WAOSPIGIS::washington-state-public-schools/about"> Washington Spatial Data</a>
+            </p>
+            <p>
+              Private School Locations -
+              <a href = "https://data-seattlecitygis.opendata.arcgis.com/datasets/SeattleCityGIS::private-schools-2/about"> Seattle GeoData</a>
+            </p>
+        </div>
+
+        </div>
+  </div>
+    </article>
+
+  </section>
+
+  <section id="footer">
+    <h2>Thanks for Reading!</h2>
+  </section>
+
+
+  <script>
+    // 1. Declare the maps, script panels, and different thematic layers.
+    let map, scriptPanel = scrollama(), HsDiplomaLayer, PublicSchoolsLayer, PrivateSchoolsLayer;
+
+    // 2. Intialize the layout.
+   
+    history.scrollRestoration = "manual"; // make sure the geo-narrative will be scrolled to the cover page even after a page refresh.
+    window.scrollTo(0, 0); // scroll the geo-narrative to the coverpage
+    adjustStoryboardlSize(); // force a browser window resize.
+    window.addEventListener("resize", adjustStoryboardlSize); // // ask the browser window listen to the resize event, thereby force a viewport resize whenever adjusting the window size.
+
+    // 3. Define Generic window resize listener event
+    function adjustStoryboardlSize() {
+
+      const scenes = document.getElementsByClassName("scene");
+      const storyboard = document.getElementById("storyboard");
+
+      // 3.1 determine the height of each scene element
+      let sceneH = Math.floor(window.innerHeight * 0.75);
+      for (const scene of scenes) {
+        scene.style.height = sceneH + "px";
+      }
+      
+      // 3.2 determin the height of the storyboard.
+      let storyboardHeight = window.innerHeight;
+      let storyboardMarginTop = (window.innerHeight - storyboardHeight) / 2;
+
+      storyboard.style.height = storyboardHeight + "px";
+      storyboard.style.top = storyboardMarginTop + "px"
+
+      // 3.3 tell scrollama/script panel to update new element dimensions
+      scriptPanel.resize();
+    }
+
+    // 4. Initialize the mapbox
+    
+   
+    map = new mapboxgl.Map({
+      container: 'map', // container ID
+      style: 'mapbox://styles/mapbox/dark-v10',
+      zoom: 5.5, // starting zoom
+      minZoom: 3,
+      maxZoom: 10,
+      center: [-122.5, 47.33], // starting center
+      scrollZoom: false,
+      boxZoom: false,
+      doubleClickZoom: false
+    });  // Declare the map object
+
+    // An alternative way to disable map zoom when using scroll
+    // map.scrollZoom.disable();
+
+
+    // 5. define the asynchronous function to load geojson data and then performs the dependent actions.
+    async function geojsonFetch() {
+
+      // 6 wait till the data of washington counties and celltowers are fully loaded.
+      let response, HsDiploma, PublicSchools, PrivateSchools;
+      response = await fetch("assets/NoDiploma.json");
+      HsDiploma = await response.json();
+      response = await fetch("assets/WaPublic.json");
+      PublicSchools = await response.json();
+      response = await fetch("assets/SeaPrivate.json");
+      PrivateSchools = await response.json();
+
+
+      // 7. Trigger operations inside of the the ()=> {} funciton while loading the map.
+      map.on('load', () => {
+
+        // 8. add map source and declare layers.
+        map.addSource('PublicSchools-src', {
+          type: 'geojson',
+          data: PublicSchools
+        });
+
+        map.addSource('HsDiploma-src', {
+          type: 'geojson',
+          data: HsDiploma
+        });
+
+        map.addSource('PrivateSchools-src', {
+          type: 'geojson',
+          data: PrivateSchools
+        });
+
+        HsDiplomaLayer = {
+          'id': 'HsDiploma-polygons',
+          'type': 'fill',
+          'source': 'HsDiploma-src',
+          'minzoom': 5,
+          'paint': {
+            'fill-color': [
+              'step', ['get', 'NoHsDiplomaPercentage'],
+              '#f2f0f7',
+              5, '#cbc9e2',
+              10, '#9e9ac8',
+              25, '#756bb1',
+              50, '#54278f'
+            ],
+            'fill-opacity': 0.8
+          }
+        };
+
+        PublicSchoolsLayer = {
+          'id': 'PublicSchools-points',
+          'type': 'circle',
+          'source': 'PublicSchools-src',
+          'minzoom': 5,
+          'paint': {
+            'circle-color': 'red',
+            'circle-radius': 3,
+            'circle-opacity': 0.8,
+          }
+        };
+
+        PrivateSchoolsLayer = {
+          'id': 'PrivateSchools-points',
+          'type': 'circle',
+          'source': 'PrivateSchools-src',
+          'minzoom': 5,
+          'paint': {
+            'circle-color': 'blue',
+            'circle-radius': 3,
+            'circle-opacity': 0.8,
+          }
+        };
+
+        // 9. Initialize the script panel
+        scriptPanel
+          .setup({
+            step: ".scene", // all the scenes.
+            offset: 0.33, // the location of the enter and exit trigger
+            debug: false // toggler on or off the debug mode.
+          })
+          .onStepEnter(handleSceneEnter)
+          .onStepExit(handleSceneExit);
+        
+        // 10. This function performs when a scene enters the storyboard
+        function handleSceneEnter(response) {
+
+          var index = response.index; // capture the id of the current scene. 
+          
+          // 1st scene: WA state No HS diploma map
+          if (index === 0) { 
+
+            map.flyTo({
+              center: [-123.8, 47.33],
+              zoom: 6,
+              pitch: 0,
+              speed: 0.5
+            }); // center map
+
+            if (typeof (map.getSource('HsDiploma-src')) == 'undefined') { //if the map source 'HsDiploma-src' does not exist
+              map.addSource('HsDiploma-src', {
+                type: 'geojson',
+                data: HsDiploma
+              }); // reload the map source of 'HsDiploma-src'
+            } else {
+              map.getSource('HsDiploma-src').setData(HsDiploma); // if the map source does not exist, relaod the data counties to the pre-defined map source 'counties-src'.
+
+            }
+
+            if (!map.getLayer("HsDiploma-polygons")) { // if the map layer 'HsDiploma-polygons' does not exit
+              map.addLayer(HsDiplomaLayer);
+            }
+            document.getElementById("cover").style.visibility = "hidden"; // Hide the cover page
+          
+            // 2nd scene: WA public school location 
+          } else if (index === 1) { 
+
+            if (typeof (map.getSource('PublicSchools-src')) == 'undefined') {
+              map.addSource('PublicSchools-src', {
+                type: 'geojson',
+                data: PublicSchools
+              });
+            } else {
+              map.getSource('PublicSchools-src').setData(PublicSchools);
+
+            }
+
+            if (!map.getLayer("PublicSchools-points")) {
+              map.addLayer(PublicSchoolsLayer);
+            }
+
+            // 3rd scene: Seattle location zoom 
+          } else if (index === 2) {
+            map.flyTo({
+              center: [-122.4121036, 47.6131229],
+              zoom: 12,
+              pitch: 0,
+              speed: 0.5
+
+            });
+                        
+            // 4th scene: Seattle private school locations & no public school 
+          } else if (index === 3) {
+
+            if (typeof (map.getSource('PrivateSchools-src')) == 'undefined') {
+              map.addSource('PrivateSchools-src', {
+                type: 'geojson',
+                data: PrivateSchools
+              });
+            } else {
+              map.getSource('PrivateSchools-src').setData(PrivateSchools);
+
+            }
+
+            if (!map.getLayer("PrivateSchools-points")) {
+              map.addLayer(PrivateSchoolsLayer);
+            }
+
+            // 5th scene: All features - Seattle zoom
+          } else if (index === 4) {
+            if (typeof (map.getSource('PublicSchools-src')) == 'undefined') {
+              map.addSource('PublicSchools-src', {
+                type: 'geojson',
+                data: PublicSchools
+              });
+            } else {
+              map.getSource('PublicSchools-src').setData(PublicSchools);
+
+            }
+
+            if (!map.getLayer("PublicSchools-points")) {
+              map.addLayer(PublicSchoolsLayer);
+            }
+                        
+          }
+        }
+
+        // 11. This function performs when a scene exists the storyboard
+        function handleSceneExit(response) {
+          var index = response.index;
+
+          if (index === 0) {
+            if (response.direction == 'down') { 
+              document.getElementById("cover").style.visibility = "hidden"; // when you scroll down, the cover page will be hided.
+            } else {
+              document.getElementById("cover").style.visibility = "visible"; // when you scroll up, the cover page will be shown.
+            }
+          } else if (index === 1) {
+            if (response.direction == 'up') { 
+              map.removeLayer('PublicSchools-points');
+            }
+          } else if (index === 2) {
+              map.removeLayer('PublicSchools-points');
+          } else if (index === 3) {
+            if (response.direction == 'up') { 
+              map.removeLayer('PrivateSchools-points');
+            }
+          }
+        }
+
+      });
+
+    };
+
+    // 5 call the data loading function.
+    geojsonFetch();
+  </script>
+</body>
+
+</html>
