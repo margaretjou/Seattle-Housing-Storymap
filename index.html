@@ -208,7 +208,10 @@
           })
         };
 
-        map.addSource('LightRailPoints-src', { type: 'geojson', data: LightRailGeoJSON });
+        map.addSource('LightRailPoints-src', { 
+          type: 'geojson', 
+          data: LightRailGeoJSON 
+        });
 
         LightRailLayer = {
           id: 'LightRailPoints-layer',
