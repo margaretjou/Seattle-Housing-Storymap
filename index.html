@@ -6,7 +6,7 @@
   <meta name="description" content="GeoNarrative Template" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>Seattle Housing in relation to Link StationGeoNarrative</title>
+  <title>Relationship between Light Rail Stations and Seattle Housing Development</title>
   <!-- <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;1,400;1,500&display=swap" /> -->
   <!-- <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css"> -->
@@ -20,8 +20,9 @@
   <!-- loading a video cover page -->
   <section id="cover" style="background: url('img/cover.jpeg') no-repeat center center;  background-size: cover;">
     <div id="intro">
-      <h1>Lorem ipsum</h1>
-      <h5>Lorem ipsum</h5>
+      <h1>Relationship between Light Rail Stations and Seattle Housing Development</h1>
+      <h5>Analyzing how the emergence of light rail stations over time affects housing development in 
+        Seattle based on housing permit inspection completion.</h5>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
         ut labore et dolore magna aliqua.
@@ -45,14 +46,6 @@
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
         ut labore et dolore magna aliqua.
       </p>
-      <ul style="list-style: none; padding: 5px;">
-        <p>Lorem ipsum</p>
-        <li><span style="display:inline-block; width:20px; height:20px; background-color:#f2f0f7; margin-right:5px;"></span> 0-4%</li>
-        <li><span style="display:inline-block; width:20px; height:20px; background-color:#cbc9e2; margin-right:5px;"></span> 5-9%</li>
-        <li><span style="display:inline-block; width:20px; height:20px; background-color:#9e9ac8; margin-right:5px;"></span> 10-24%</li>
-        <li><span style="display:inline-block; width:20px; height:20px; background-color:#756bb1; margin-right:5px;"></span> 25-49%</li>
-        <li><span style="display:inline-block; width:20px; height:20px; background-color:#54278f; margin-right:5px;"></span> 50%+</li>
-      </ul>
     </article>
     <article class="scene" data-scene="1">
       <h2>2016</h2>
@@ -97,16 +90,16 @@
           <div class="text-box">
             <h3>Sources</h3>
             <p>
-              No High School Diploma Rates -
-              <a href = "https://geo.wa.gov/datasets/fb5dc68a58c54f44887042b1f787bc82_0/about"> Washington Spatial Data</a>
+              Source1 -
+              <a href = "x"> Dataset</a>
             </p>
             <p>
-              Public School Locations -
-              <a href = "https://geo.wa.gov/datasets/WAOSPIGIS::washington-state-public-schools/about"> Washington Spatial Data</a>
+              Source2 -
+              <a href = "x"> Dataset</a>
             </p>
             <p>
-              Private School Locations -
-              <a href = "https://data-seattlecitygis.opendata.arcgis.com/datasets/SeattleCityGIS::private-schools-2/about"> Seattle GeoData</a>
+              Source3 -
+              <a href = "x"> Dataset</a>
             </p>
         </div>
 
@@ -123,7 +116,7 @@
 
   <script>
     // 1. Declare the maps, script panels, and different thematic layers.
-    let map, scriptPanel = scrollama(), HsDiplomaLayer, PublicSchoolsLayer, PrivateSchoolsLayer;
+    let map, scriptPanel = scrollama(), LightRailLayer;
 
     // 2. Intialize the layout.
    
@@ -139,7 +132,7 @@
       const storyboard = document.getElementById("storyboard");
 
       // 3.1 determine the height of each scene element
-      let sceneH = Math.floor(window.innerHeight * 0.75);
+      let sceneH = Math.floor(window.innerHeight * 0.85);
       for (const scene of scenes) {
         scene.style.height = sceneH + "px";
       }
@@ -180,22 +173,15 @@
     async function geojsonFetch() {
 
       // 6 wait till the data of washington counties and celltowers are fully loaded.
-      let response, HsDiploma, PublicSchools, PrivateSchools;
-      response = await fetch("assets/NoDiploma.json");
-      HsDiploma = await response.json();
-      response = await fetch("assets/WaPublic.json");
-      PublicSchools = await response.json();
-      response = await fetch("assets/SeaPrivate.json");
-      PrivateSchools = await response.json();
       
-      let csvText;
+      let LightRailinfo;
       response = await fetch("assets/LightRails.csv");
-      csvText = await response.text();
+      LightRailinfo = await response.text();
 
       // Convert CSV text to array of objects
-      const csvLines = csvText.trim().split("\n");
-      const csvHeader = csvLines[0].split(",");
-      const csvData = csvLines.slice(1).map(line => {
+      const LightRailLines = LightRailinfo.trim().split("\n");
+      const LightRailHeader = LightRailLines[0].split(",");
+      const LightRailData = LightRailLines.slice(1).map(line => {
         const parts = line.split(",");
         return {
           name: parts[0],
@@ -209,24 +195,10 @@
       map.on('load', () => {
 
         // 8. add map source and declare layers.
-        map.addSource('PublicSchools-src', {
-          type: 'geojson',
-          data: PublicSchools
-        });
 
-        map.addSource('HsDiploma-src', {
-          type: 'geojson',
-          data: HsDiploma
-        });
-
-        map.addSource('PrivateSchools-src', {
-          type: 'geojson',
-          data: PrivateSchools
-        });
-
-        const csvGeoJSON = {
+        const LightRailGeoJSON = {
           type: "FeatureCollection",
-          features: csvData.map(d => {
+          features: LightRailData.map(d => {
             const dYear = parseInt(d.date.split("/")[2], 10); // extract year
             return {
               type: "Feature",
@@ -236,42 +208,20 @@
           })
         };
 
-        map.addSource('CSVPoints-src', { type: 'geojson', data: csvGeoJSON });
+        map.addSource('LightRailPoints-src', { type: 'geojson', data: LightRailGeoJSON });
 
-        map.addLayer({
-          id: 'CSVPoints-layer',
+        LightRailLayer = {
+          id: 'LightRailPoints-layer',
           type: 'circle',
-          source: 'CSVPoints-src',
+          source: 'LightRailPoints-src',
           paint: {
             'circle-color': 'green',
             'circle-radius': 6,
             'circle-opacity': 0.9
           }
-        });
-
-        PublicSchoolsLayer = {
-          'id': 'PublicSchools-points',
-          'type': 'circle',
-          'source': 'PublicSchools-src',
-          'minzoom': 5,
-          'paint': {
-            'circle-color': 'red',
-            'circle-radius': 3,
-            'circle-opacity': 0.8,
-          }
         };
 
-        PrivateSchoolsLayer = {
-          'id': 'PrivateSchools-points',
-          'type': 'circle',
-          'source': 'PrivateSchools-src',
-          'minzoom': 5,
-          'paint': {
-            'circle-color': 'blue',
-            'circle-radius': 3,
-            'circle-opacity': 0.8,
-          }
-        };
+        map.addLayer(LightRailLayer);
 
         // 9. Initialize the script panel
         scriptPanel
@@ -288,39 +238,26 @@
 
           var index = response.index; // capture the id of the current scene. 
           
-          // 1st scene: WA state No HS diploma map
+          // 1st scene: 2009 Link Stations
           if (index === 0) { 
-            if (typeof (map.getSource('CSVPoints-src')) == 'undefined') {
-              map.addSource('CSVPoints-src', {
+            if (typeof (map.getSource('LightRailPoints-src')) == 'undefined') {
+              map.addSource('LightRailPoints-src', {
                 type: 'geojson',
-                data: csvGeoJSON
+                data: LightRailGeoJSON
               });
             } else {
-              map.getSource('CSVPoints-src').setData(csvGeoJSON);
+              map.getSource('LightRailPoints-src').setData(LightRailGeoJSON);
 
             }
 
-            if (!map.getLayer("CSVPoints-layer")) {
-              map.addLayer(CSVPointsLayer);
+            if (!map.getLayer("LightRailPoints-layer")) {
+              map.addLayer(LightRailPointsLayer);
             }
-            map.setFilter('CSVPoints-layer', ['==', ['get', 'year'], 2009]);
+            map.setFilter('LightRailPoints-layer', ['==', ['get', 'year'], 2009]);
 
-            /*if (typeof (map.getSource('HsDiploma-src')) == 'undefined') { //if the map source 'HsDiploma-src' does not exist
-              map.addSource('HsDiploma-src', {
-                type: 'geojson',
-                data: HsDiploma
-              }); // reload the map source of 'HsDiploma-src'
-            } else {
-              map.getSource('HsDiploma-src').setData(HsDiploma); // if the map source does not exist, relaod the data counties to the pre-defined map source 'counties-src'.
-
-            }
-
-            if (!map.getLayer("HsDiploma-polygons")) { // if the map layer 'HsDiploma-polygons' does not exit
-              map.addLayer(HsDiplomaLayer);
-            }*/
             document.getElementById("cover").style.visibility = "hidden"; // Hide the cover page
           
-            // 2nd scene: WA public school location 
+            // 2nd scene: 2016 
           } else if (index === 1) { 
             /*map.flyTo({
               center: [-122.4121036, 47.6131229],
@@ -330,27 +267,27 @@
 
             });*/
 
-            if (typeof (map.getSource('CSVPoints-src')) == 'undefined') {
-              map.addSource('CSVPoints-src', {
+            if (typeof (map.getSource('LightRailPoints-src')) == 'undefined') {
+              map.addSource('LightRailPoints-src', {
                 type: 'geojson',
-                data: csvGeoJSON
+                data: LightRailGeoJSON
               });
             } else {
-              map.getSource('CSVPoints-src').setData(csvGeoJSON);
+              map.getSource('LightRailPoints-src').setData(LightRailGeoJSON);
 
             }
 
-            if (!map.getLayer("CSVPoints-layer")) {
-              map.addLayer(CSVPointsLayer);
+            if (!map.getLayer("LightRailPoints-layer")) {
+              map.addLayer(LightRailPointsLayer);
             }
 
-            map.setFilter('CSVPoints-layer', [
+            map.setFilter('LightRailPoints-layer', [
               "any",
               ["==", ["get", "year"], 2009],
               ["==", ["get", "year"], 2016] // add 3 stations
             ]);
 
-            // 3rd scene: Seattle location zoom 
+            //  3rd scene: 2021
           } else if (index === 2) {
             /*map.flyTo({
               center: [-122.4121036, 47.6131229],
@@ -360,43 +297,43 @@
 
             });*/
 
-            if (typeof (map.getSource('CSVPoints-src')) == 'undefined') {
-              map.addSource('CSVPoints-src', {
+            if (typeof (map.getSource('LightRailPoints-src')) == 'undefined') {
+              map.addSource('LightRailPoints-src', {
                 type: 'geojson',
-                data: csvGeoJSON
+                data: LightRailGeoJSON
               });
             } else {
-              map.getSource('CSVPoints-src').setData(csvGeoJSON);
+              map.getSource('LightRailPoints-src').setData(LightRailGeoJSON);
 
             }
 
-            if (!map.getLayer("CSVPoints-layer")) {
-              map.addLayer(CSVPointsLayer);
+            if (!map.getLayer("LightRailPoints-layer")) {
+              map.addLayer(LightRailPointsLayer);
             }
-            map.setFilter('CSVPoints-layer', [
+            map.setFilter('LightRailPoints-layer', [
               "any",
               ["==", ["get", "year"], 2009],
               ["==", ["get", "year"], 2016],
               ["==", ["get", "year"], 2021] // add 3 stations
             ]);
 
-            // 4th scene: Seattle private school locations & no public school 
+            // 4th scene: 2024 
           } else if (index === 3) {
 
-            if (typeof (map.getSource('CSVPoints-src')) == 'undefined') {
-              map.addSource('CSVPoints-src', {
+            if (typeof (map.getSource('LightRailPoints-src')) == 'undefined') {
+              map.addSource('LightRailPoints-src', {
                 type: 'geojson',
-                data: csvGeoJSON
+                data: LightRailGeoJSON
               });
             } else {
-              map.getSource('CSVPoints-src').setData(csvGeoJSON);
+              map.getSource('LightRailPoints-src').setData(LightRailGeoJSON);
 
             }
 
-            if (!map.getLayer("CSVPoints-layer")) {
-              map.addLayer(CSVPointsLayer);
+            if (!map.getLayer("LightRailPoints-layer")) {
+              map.addLayer(LightRailPointsLayer);
             }
-            map.setFilter('CSVPoints-layer', [
+            map.setFilter('LightRailPoints-layer', [
               "any",
               ["==", ["get", "year"], 2009],
               ["==", ["get", "year"], 2016],
@@ -404,37 +341,23 @@
               ["==", ["get", "year"], 2024] // add 4 stations
             ]);
 
-            /*if (typeof (map.getSource('PrivateSchools-src')) == 'undefined') {
-              map.addSource('PrivateSchools-src', {
-                type: 'geojson',
-                data: PrivateSchools
-              });
-            } else {
-              map.getSource('PrivateSchools-src').setData(PrivateSchools);
-
-            }
-
-            if (!map.getLayer("PrivateSchools-points")) {
-              map.addLayer(PrivateSchoolsLayer);
-            }*/
-
-            // 5th scene: All features - Seattle zoom
+            // 5th scene: 2025
           } else if (index === 4) {
 
-            if (typeof (map.getSource('CSVPoints-src')) == 'undefined') {
-              map.addSource('CSVPoints-src', {
+            if (typeof (map.getSource('LightRailPoints-src')) == 'undefined') {
+              map.addSource('LightRailPoints-src', {
                 type: 'geojson',
-                data: csvGeoJSON
+                data: LightRailGeoJSON
               });
             } else {
-              map.getSource('CSVPoints-src').setData(csvGeoJSON);
+              map.getSource('LightRailPoints-src').setData(LightRailGeoJSON);
 
             }
 
-            if (!map.getLayer("CSVPoints-layer")) {
-              map.addLayer(CSVPointsLayer);
+            if (!map.getLayer("LightRailPoints-layer")) {
+              map.addLayer(LightRailPointsLayer);
             }
-            map.setFilter('CSVPoints-layer', [
+            map.setFilter('LightRailPoints-layer', [
               "any",
               ["==", ["get", "year"], 2009],
               ["==", ["get", "year"], 2016],
@@ -442,20 +365,6 @@
               ["==", ["get", "year"], 2024],
               ["==", ["get", "year"], 2025] // add 3 stations
             ]);
-
-            /*if (typeof (map.getSource('PublicSchools-src')) == 'undefined') {
-              map.addSource('PublicSchools-src', {
-                type: 'geojson',
-                data: PublicSchools
-              });
-            } else {
-              map.getSource('PublicSchools-src').setData(PublicSchools);
-
-            }
-
-            if (!map.getLayer("PublicSchools-points")) {
-              map.addLayer(PublicSchoolsLayer);
-            }*/
                         
           }
         }
@@ -471,20 +380,9 @@
               document.getElementById("cover").style.visibility = "visible"; // when you scroll up, the cover page will be shown.
             }
             if (response.direction == 'up') { 
-              map.setFilter('CSVPoints-layer', null);
+              map.setFilter('LightRailPoints-layer', null); // shows all stations before scene 1
             }
-          } else if (index === 1) {
-            if (response.direction == 'up') { 
-              map.removeLayer('PublicSchools-points');
-              
-            }
-          } else if (index === 2) {
-              map.removeLayer('PublicSchools-points');
-          } else if (index === 3) {
-            if (response.direction == 'up') { 
-              map.removeLayer('PrivateSchools-points');
-            }
-          }
+          } 
         }
 
       });
