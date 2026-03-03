@@ -174,10 +174,10 @@
 
       // 6 wait till the data of washington counties and celltowers are fully loaded.
       
-      let LightRailinfo;
+      let response, LightRailinfo;
       response = await fetch("assets/LightRails.csv");
       LightRailinfo = await response.text();
-
+      
       // Convert CSV text to array of objects
       const LightRailLines = LightRailinfo.trim().split("\n");
       const LightRailHeader = LightRailLines[0].split(",");
