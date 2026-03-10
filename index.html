@@ -174,29 +174,26 @@
 
       // 6 wait till the data of washington counties and celltowers are fully loaded.
       
-      let response, LightRailinfo;
-      response = await fetch("assets/LightRails.csv");
-      LightRailinfo = await response.text();
-      
-      // Convert CSV text to array of objects
-      const LightRailLines = LightRailinfo.trim().split("\n");
-      const LightRailHeader = LightRailLines[0].split(",");
-      const LightRailData = LightRailLines.slice(1).map(line => {
-        const parts = line.split(",");
-        return {
-          name: parts[0],
-          date: parts[1],
-          lat: parseFloat(parts[2]),
-          lng: parseFloat(parts[3])
-        };
+      let response, LightRailGeoJSON;
+      response = await fetch("assets/LightRails.geojson");
+      LightRailGeoJSON = await response.json();
+
+      LightRailGeoJSON.features.forEach(feature => {
+        const date = feature.properties.Date_Opened;
+        const year = new Date(date).getFullYear();
+        feature.properties.year = year;
       });
 
       // 7. Trigger operations inside of the the ()=> {} funciton while loading the map.
       map.on('load', () => {
 
         // 8. add map source and declare layers.
+        map.addSource('LightRailStations-src', {
+          type: 'geojson',
+          data: LightRailGeoJSON
+        });
 
-        const LightRailGeoJSON = {
+        /*const LightRailGeoJSON = {
           type: "FeatureCollection",
           features: LightRailData.map(d => {
             const dYear = parseInt(d.date.split("/")[2], 10); // extract year
@@ -206,17 +203,12 @@
               geometry: { type: "Point", coordinates: [d.lng, d.lat] }
             };
           })
-        };
-
-        map.addSource('LightRailPoints-src', { 
-          type: 'geojson', 
-          data: LightRailGeoJSON 
-        });
+        };*/
 
         LightRailLayer = {
-          id: 'LightRailPoints-layer',
+          id: 'LightRail-Points',
           type: 'circle',
-          source: 'LightRailPoints-src',
+          source: 'LightRailStations-src',
           paint: {
             'circle-color': 'green',
             'circle-radius': 6,
@@ -243,20 +235,20 @@
           
           // 1st scene: 2009 Link Stations
           if (index === 0) { 
-            if (typeof (map.getSource('LightRailPoints-src')) == 'undefined') {
-              map.addSource('LightRailPoints-src', {
+            if (typeof (map.getSource('LightRailStations-src')) == 'undefined') {
+              map.addSource('LightRailStations-src', {
                 type: 'geojson',
                 data: LightRailGeoJSON
               });
             } else {
-              map.getSource('LightRailPoints-src').setData(LightRailGeoJSON);
+              map.getSource('LightRailStations-src').setData(LightRailGeoJSON);
 
             }
 
-            if (!map.getLayer("LightRailPoints-layer")) {
-              map.addLayer(LightRailPointsLayer);
+            if (!map.getLayer("LightRail-Points")) {
+              map.addLayer(LightRailLayer);
             }
-            map.setFilter('LightRailPoints-layer', ['==', ['get', 'year'], 2009]);
+            map.setFilter('LightRail-Points', ['==', ['get', 'year'], 2009]);
 
             document.getElementById("cover").style.visibility = "hidden"; // Hide the cover page
           
@@ -270,21 +262,21 @@
 
             });*/
 
-            if (typeof (map.getSource('LightRailPoints-src')) == 'undefined') {
-              map.addSource('LightRailPoints-src', {
+            if (typeof (map.getSource('LightRailStations-src')) == 'undefined') {
+              map.addSource('LightRailStations-src', {
                 type: 'geojson',
                 data: LightRailGeoJSON
               });
             } else {
-              map.getSource('LightRailPoints-src').setData(LightRailGeoJSON);
+              map.getSource('LightRailStations-src').setData(LightRailGeoJSON);
 
             }
 
-            if (!map.getLayer("LightRailPoints-layer")) {
-              map.addLayer(LightRailPointsLayer);
+            if (!map.getLayer("LightRail-Points")) {
+              map.addLayer(LightRailLayer);
             }
 
-            map.setFilter('LightRailPoints-layer', [
+            map.setFilter('LightRail-Points', [
               "any",
               ["==", ["get", "year"], 2009],
               ["==", ["get", "year"], 2016] // add 3 stations
@@ -300,20 +292,20 @@
 
             });*/
 
-            if (typeof (map.getSource('LightRailPoints-src')) == 'undefined') {
-              map.addSource('LightRailPoints-src', {
+            if (typeof (map.getSource('LightRailStations-src')) == 'undefined') {
+              map.addSource('LightRailStations-src', {
                 type: 'geojson',
                 data: LightRailGeoJSON
               });
             } else {
-              map.getSource('LightRailPoints-src').setData(LightRailGeoJSON);
+              map.getSource('LightRailStations-src').setData(LightRailGeoJSON);
 
             }
 
-            if (!map.getLayer("LightRailPoints-layer")) {
-              map.addLayer(LightRailPointsLayer);
+            if (!map.getLayer("LightRail-Points")) {
+              map.addLayer(LightRailLayer);
             }
-            map.setFilter('LightRailPoints-layer', [
+            map.setFilter('LightRail-Points', [
               "any",
               ["==", ["get", "year"], 2009],
               ["==", ["get", "year"], 2016],
@@ -323,20 +315,20 @@
             // 4th scene: 2024 
           } else if (index === 3) {
 
-            if (typeof (map.getSource('LightRailPoints-src')) == 'undefined') {
-              map.addSource('LightRailPoints-src', {
+            if (typeof (map.getSource('LightRailStations-src')) == 'undefined') {
+              map.addSource('LightRailStations-src', {
                 type: 'geojson',
                 data: LightRailGeoJSON
               });
             } else {
-              map.getSource('LightRailPoints-src').setData(LightRailGeoJSON);
+              map.getSource('LightRailStations-src').setData(LightRailGeoJSON);
 
             }
 
-            if (!map.getLayer("LightRailPoints-layer")) {
-              map.addLayer(LightRailPointsLayer);
+            if (!map.getLayer("LightRail-Points")) {
+              map.addLayer(LightRailLayer);
             }
-            map.setFilter('LightRailPoints-layer', [
+            map.setFilter('LightRail-Points', [
               "any",
               ["==", ["get", "year"], 2009],
               ["==", ["get", "year"], 2016],
@@ -347,20 +339,20 @@
             // 5th scene: 2025
           } else if (index === 4) {
 
-            if (typeof (map.getSource('LightRailPoints-src')) == 'undefined') {
-              map.addSource('LightRailPoints-src', {
+            if (typeof (map.getSource('LightRailStations-src')) == 'undefined') {
+              map.addSource('LightRailStations-src', {
                 type: 'geojson',
                 data: LightRailGeoJSON
               });
             } else {
-              map.getSource('LightRailPoints-src').setData(LightRailGeoJSON);
+              map.getSource('LightRailStations-src').setData(LightRailGeoJSON);
 
             }
 
-            if (!map.getLayer("LightRailPoints-layer")) {
-              map.addLayer(LightRailPointsLayer);
+            if (!map.getLayer("LightRail-Points")) {
+              map.addLayer(LightRailLayer);
             }
-            map.setFilter('LightRailPoints-layer', [
+            map.setFilter('LightRail-Points', [
               "any",
               ["==", ["get", "year"], 2009],
               ["==", ["get", "year"], 2016],
@@ -383,7 +375,7 @@
               document.getElementById("cover").style.visibility = "visible"; // when you scroll up, the cover page will be shown.
             }
             if (response.direction == 'up') { 
-              map.setFilter('LightRailPoints-layer', null); // shows all stations before scene 1
+              map.setFilter('LightRail-Points', null); // shows all stations before scene 1
             }
           } 
         }
