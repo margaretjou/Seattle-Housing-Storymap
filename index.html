@@ -1,392 +1,1577 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="description" content="GeoNarrative Template" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>Relationship between Light Rail Stations and Seattle Housing Development</title>
-  <!-- <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;1,400;1,500&display=swap" /> -->
-  <!-- <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css"> -->
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"> -->
-  <link rel="stylesheet" href="css/main.css">
-  <script src="https://unpkg.com/scrollama"></script>
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seattle Link Light Rail — Tracks to Tomorrow</title>
 
-<body>
-  <!-- loading a video cover page -->
-  <section id="cover" style="background: url('img/cover.jpeg') no-repeat center center;  background-size: cover;">
-    <div id="intro">
-      <h1>Relationship between Light Rail Stations and Seattle Housing Development</h1>
-      <h5>Analyzing how the emergence of light rail stations over time affects housing development in 
-        Seattle based on housing permit inspection completion.</h5>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
-        ut labore et dolore magna aliqua.
-      </p>
+  <!-- Mapbox GL JS -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet"/>
 
-      <div class="footnote">
-        <span> Lorem ipsum</span>
-      </div>
-    </div>
-  </section>
-  <!-- a geonarrative will have two major components, a storyboard and a script panel of a series of scenes/actions -->
-  <section id="geonarrative">
-    <!-- a storymap can present differnt types of objects, like map, chart, diagram, etc. -->
-    <div id="storyboard">
-      <!-- create the place holder element for map -->
-      <div id="map"></div>
-    </div>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 
-    <article class="scene" data-scene="0">
-      <h2>2009</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
-        ut labore et dolore magna aliqua.
-      </p>
-    </article>
-    <article class="scene" data-scene="1">
-      <h2>2016</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
-        ut labore et dolore magna aliqua.
-      <div>
-        <p><i class="bi bi-geo-alt"></i> <span>Lorem ipsum</span>
-      </div>
-    </article>
-    <article class="scene" data-scene="2">
-      <h2>2021</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
-        ut labore et dolore magna aliqua.
-      </p>
-    </article>
-    <article class="scene" data-scene="3">
-      <h2>2024</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
-        ut labore et dolore magna aliqua.
-      </p>
-      <div>
-        <p><i class="bi bi-geo-alt"></i> <span> Lorem ipsum</span>
-      </div>
-    </article>
-    <article class="scene" data-scene="4">
-      <h2>2025</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
-        ut labore et dolore magna aliqua.
-      </p>
-    </article>
-    <article class="scene fullscreen" data-scene="5">
-      <h2>Conclusion</h2>
-      <div class="scene-features">
-        <div class="feature-left">
-          <img src="/img/end.jpeg"/>
-        </div>
-        <div class="feature-right">
-          <div class="text-box">
-            <h3>Sources</h3>
-            <p>
-              Source1 -
-              <a href = "x"> Dataset</a>
-            </p>
-            <p>
-              Source2 -
-              <a href = "x"> Dataset</a>
-            </p>
-            <p>
-              Source3 -
-              <a href = "x"> Dataset</a>
-            </p>
-        </div>
+  <style>
+    /* ── RESET & BASE ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        </div>
-  </div>
-    </article>
-
-  </section>
-
-  <section id="footer">
-    <h2>Thanks for Reading!</h2>
-  </section>
-
-
-  <script>
-    // 1. Declare the maps, script panels, and different thematic layers.
-    let map, scriptPanel = scrollama(), LightRailLayer;
-
-    // 2. Intialize the layout.
-   
-    history.scrollRestoration = "manual"; // make sure the geo-narrative will be scrolled to the cover page even after a page refresh.
-    window.scrollTo(0, 0); // scroll the geo-narrative to the coverpage
-    adjustStoryboardlSize(); // force a browser window resize.
-    window.addEventListener("resize", adjustStoryboardlSize); // // ask the browser window listen to the resize event, thereby force a viewport resize whenever adjusting the window size.
-
-    // 3. Define Generic window resize listener event
-    function adjustStoryboardlSize() {
-
-      const scenes = document.getElementsByClassName("scene");
-      const storyboard = document.getElementById("storyboard");
-
-      // 3.1 determine the height of each scene element
-      let sceneH = Math.floor(window.innerHeight * 0.85);
-      for (const scene of scenes) {
-        scene.style.height = sceneH + "px";
-      }
-      
-      // 3.2 determin the height of the storyboard.
-      let storyboardHeight = window.innerHeight;
-      let storyboardMarginTop = (window.innerHeight - storyboardHeight) / 2;
-
-      storyboard.style.height = storyboardHeight + "px";
-      storyboard.style.top = storyboardMarginTop + "px"
-
-      // 3.3 tell scrollama/script panel to update new element dimensions
-      scriptPanel.resize();
+    :root {
+      --ink:        #0d0f14;
+      --paper:      #f5f0e8;
+      --rail:       #1a3a5c;
+      --rail-light: #2b6cb0;
+      --signal:     #e8b84b;
+      --signal-dim: #c49a30;
+      --growth:     #3a7d44;
+      --growth-lt:  #6abf69;
+      --concrete:   #8a8f99;
+      --card-bg:    rgba(13,15,20,0.88);
+      --serif:      'Bebas Neue', sans-serif;
+      --body:       'DM Sans', sans-serif;
+      --mono:       'DM Mono', monospace;
     }
 
-    // 4. Initialize the mapbox
-    mapboxgl.accessToken = 
-      'pk.eyJ1IjoibWpvdSIsImEiOiJjbWh5ZWZ6N2gwYWluMmptdTVlczZ5NXEzIn0.Ha9WIGJy4xJyUiZSR5xbNg';
-    
-   
-    map = new mapboxgl.Map({
-      container: 'map', // container ID
-      style: 'mapbox://styles/mapbox/dark-v10',
-      zoom: 9, // starting zoom
-      minZoom: 3,
-      maxZoom: 10,
-      center: [-122.4121036, 47.6131229], // starting center
-      scrollZoom: false,
-      boxZoom: false,
-      doubleClickZoom: false
-    });  // Declare the map object
+    html { scroll-behavior: smooth; }
 
-    // An alternative way to disable map zoom when using scroll
-    // map.scrollZoom.disable();
+    body {
+      font-family: var(--body);
+      background: var(--ink);
+      color: var(--paper);
+      overflow-x: hidden;
+    }
 
+    /* ── HERO ─────────────────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 3rem 4rem;
+      background: var(--ink);
+      overflow: hidden;
+    }
 
-    // 5. define the asynchronous function to load geojson data and then performs the dependent actions.
-    async function geojsonFetch() {
+    #hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, #0a1628 0%, #0d1f3c 40%, #061018 100%);
+    }
 
-      // 6 wait till the data of washington counties and celltowers are fully loaded.
-      
-      let response, LightRailGeoJSON;
-      response = await fetch("assets/LightRails.geojson");
-      LightRailGeoJSON = await response.json();
+    /* animated rail lines in background */
+    #hero-rails {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
 
-      LightRailGeoJSON.features.forEach(feature => {
-        const date = feature.properties.Date_Opened;
-        const year = new Date(date).getFullYear();
-        feature.properties.year = year;
+    .rail-line {
+      position: absolute;
+      height: 1px;
+      width: 200%;
+      left: -50%;
+      background: linear-gradient(90deg, transparent 0%, var(--rail-light) 30%, var(--signal) 50%, var(--rail-light) 70%, transparent 100%);
+      opacity: 0;
+      animation: trainPass 6s ease-in-out infinite;
+    }
+
+    .rail-line:nth-child(1) { top: 28%; animation-delay: 0s; }
+    .rail-line:nth-child(2) { top: 52%; animation-delay: 2.1s; opacity: 0; }
+    .rail-line:nth-child(3) { top: 71%; animation-delay: 4.3s; opacity: 0; }
+
+    @keyframes trainPass {
+      0%   { transform: translateX(-60%); opacity: 0; }
+      10%  { opacity: 0.4; }
+      80%  { opacity: 0.15; }
+      100% { transform: translateX(60%); opacity: 0; }
+    }
+
+    #hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 780px;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 1.1rem;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(4rem, 9vw, 8.5rem);
+      line-height: 0.92;
+      letter-spacing: 0.01em;
+      color: var(--paper);
+      margin-bottom: 1.5rem;
+    }
+
+    h1 span.accent { color: var(--signal); }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: rgba(245,240,232,0.7);
+      max-width: 520px;
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+    }
+
+    .scroll-cue {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--concrete);
+    }
+
+    .scroll-cue::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--concrete);
+      animation: expandLine 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes expandLine {
+      from { width: 20px; opacity: 0.3; }
+      to   { width: 50px; opacity: 1; }
+    }
+
+    /* ── LAYOUT: MAP + SCROLL ─────────────────────────────────────── */
+    #story-wrapper {
+      position: relative;
+      display: flex;
+    }
+
+    /* sticky map pane */
+    #map-container {
+      position: sticky;
+      top: 0;
+      width: 55%;
+      height: 100vh;
+      flex-shrink: 0;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── TIMELINE RAIL (left edge of scroll pane) ─────────────────── */
+    #scroll-pane {
+      width: 45%;
+      position: relative;
+      padding: 8vh 3rem 20vh 4rem;
+    }
+
+    .timeline-track {
+      position: absolute;
+      left: 1.6rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, var(--rail-light) 8%, var(--rail-light) 92%, transparent);
+    }
+
+    /* ── CHAPTER CARDS ────────────────────────────────────────────── */
+    .chapter {
+      position: relative;
+      margin-bottom: 22vh;
+      opacity: 0.35;
+      transform: translateX(12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .chapter.is-active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* timeline node */
+    .chapter::before {
+      content: '';
+      position: absolute;
+      left: -2.45rem;
+      top: 1.6rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--ink);
+      border: 2px solid var(--concrete);
+      transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+    }
+
+    .chapter.is-active::before {
+      background: var(--signal);
+      border-color: var(--signal);
+      box-shadow: 0 0 0 4px rgba(232,184,75,0.22);
+    }
+
+    .chapter-year {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 0.5rem;
+    }
+
+    .chapter-tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 2px;
+      margin-bottom: 0.8rem;
+    }
+
+    .chapter-tag.rail  { background: rgba(43,108,176,0.25); color: var(--rail-light); border: 1px solid var(--rail-light); }
+    .chapter-tag.tod   { background: rgba(58,125,68,0.25);  color: var(--growth-lt);  border: 1px solid var(--growth-lt); }
+    .chapter-tag.housing { background: rgba(232,184,75,0.18); color: var(--signal); border: 1px solid var(--signal-dim); }
+
+    .chapter-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-left: 3px solid var(--rail-light);
+      border-radius: 6px;
+      padding: 1.5rem 1.6rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .chapter.is-active .chapter-card {
+      border-left-color: var(--signal);
+    }
+
+    .chapter-card h2 {
+      font-family: var(--serif);
+      font-size: 2rem;
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+      color: var(--paper);
+      margin-bottom: 0.85rem;
+    }
+
+    .chapter-card p {
+      font-size: 0.92rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(245,240,232,0.78);
+    }
+
+    /* stat chips */
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.1rem;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 0.4rem 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: var(--paper);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.1rem;
+      color: var(--signal);
+      font-family: var(--serif);
+      letter-spacing: 0.05em;
+      line-height: 1.2;
+      margin-bottom: 0.15rem;
+    }
+
+    /* ── PROGRESS BAR ─────────────────────────────────────────────── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--rail-light), var(--signal));
+      z-index: 100;
+      transition: width 0.1s linear;
+    }
+
+    /* ── MAP OVERLAYS ─────────────────────────────────────────────── */
+    .map-chapter-label {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      z-index: 10;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--paper);
+      background: rgba(13,15,20,0.75);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.45rem 0.8rem;
+      border-radius: 4px;
+      backdrop-filter: blur(6px);
+      pointer-events: none;
+    }
+
+    /* ── OUTRO ────────────────────────────────────────────────────── */
+    #outro {
+      background: var(--ink);
+      padding: 10vh 4rem;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    #outro h2 {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      color: var(--paper);
+      margin-bottom: 1.2rem;
+    }
+
+    #outro p {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: rgba(245,240,232,0.6);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+    }
+
+    .source-note {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--concrete);
+    }
+
+    /* ── MAPBOX POPUP STYLE ───────────────────────────────────────── */
+    .mapboxgl-popup-content {
+      background: var(--card-bg) !important;
+      color: var(--paper) !important;
+      border: 1px solid rgba(255,255,255,0.12) !important;
+      border-radius: 6px !important;
+      padding: 0.9rem 1.1rem !important;
+      font-family: var(--body) !important;
+      font-size: 0.82rem !important;
+      font-weight: 300 !important;
+      backdrop-filter: blur(10px) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+    }
+    .mapboxgl-popup-content strong { color: var(--signal); font-weight: 500; }
+    .mapboxgl-popup-tip { display: none !important; }
+    .mapboxgl-popup-close-button { color: var(--concrete) !important; font-size: 1rem !important; top: 4px !important; right: 6px !important; }
+
+    /* ── MAP LEGEND ───────────────────────────────────────────────── */
+    #map-legend {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 1.5rem;
+      z-index: 10;
+      background: rgba(13,15,20,0.88);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      padding: 0.75rem 0.9rem;
+      backdrop-filter: blur(8px);
+      min-width: 170px;
+    }
+
+    .legend-title {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--concrete);
+      margin-bottom: 0.55rem;
+    }
+
+    .legend-section { margin-bottom: 0.2rem; }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.05em;
+      color: rgba(245,240,232,0.75);
+      margin-bottom: 0.3rem;
+    }
+
+    .legend-line {
+      display: inline-block;
+      width: 18px;
+      height: 3px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* Diamond shape for station legend using transform */
+    .legend-diamond {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 1px;
+      border: 2px solid #fff;
+      flex-shrink: 0;
+      transform: rotate(45deg);
+      margin: 1px 3px;
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 0.5rem 0;
+    }
+
+    /* ── RENT CHART ───────────────────────────────────────────────── */
+    .rent-chart-wrap {
+      margin-top: 1.4rem;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      padding: 1rem 1rem 0.5rem;
+    }
+
+    .rent-chart-title {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--concrete);
+      margin-bottom: 0.6rem;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      color: rgba(245,240,232,0.7);
+    }
+
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    #rent-chart {
+      width: 100%;
+      height: 160px;
+      display: block;
+    }
+
+    .chart-source {
+      font-family: var(--mono);
+      font-size: 0.52rem;
+      letter-spacing: 0.08em;
+      color: rgba(138,143,153,0.7);
+      margin-top: 0.4rem;
+      line-height: 1.5;
+    }
+
+    /* ── BEFORE / AFTER SPLIT VIEW ────────────────────────────────── */
+    .before-after-wrap {
+      margin-top: 1.4rem;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      height: 220px;
+      cursor: col-resize;
+      user-select: none;
+    }
+
+    .ba-side {
+      position: absolute;
+      top: 0; bottom: 0;
+      overflow: hidden;
+    }
+
+    .ba-before {
+      left: 0;
+      right: 0;
+    }
+
+    .ba-after {
+      left: 0;
+      right: 0;
+      clip-path: inset(0 50% 0 0);
+      transition: clip-path 0.05s linear;
+    }
+
+    .ba-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .ba-divider {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: var(--signal);
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 5;
+      transition: left 0.05s linear;
+    }
+
+    .ba-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--signal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 6;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.6);
+      pointer-events: none;
+      transition: left 0.05s linear;
+    }
+
+    .ba-handle svg {
+      width: 14px; height: 14px;
+      fill: var(--ink);
+    }
+
+    .ba-label {
+      position: absolute;
+      top: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .ba-label-before {
+      left: 0.5rem;
+      background: rgba(13,15,20,0.8);
+      color: var(--concrete);
+    }
+
+    .ba-label-after {
+      right: 0.5rem;
+      background: rgba(232,184,75,0.2);
+      color: var(--signal);
+      border: 1px solid rgba(232,184,75,0.3);
+    }
+
+    .ba-bar-chart {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      padding: 0.6rem 0.5rem 1.8rem;
+      position: relative;
+    }
+
+    .ba-bar-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      height: 100%;
+      justify-content: flex-end;
+      gap: 2px;
+    }
+
+    .ba-bar {
+      width: 100%;
+      border-radius: 2px 2px 0 0;
+      min-height: 2px;
+      transition: height 0.4s ease;
+    }
+
+    .ba-bar-label {
+      font-family: var(--mono);
+      font-size: 0.45rem;
+      letter-spacing: 0.04em;
+      color: rgba(245,240,232,0.5);
+      text-align: center;
+      position: absolute;
+      bottom: 0.3rem;
+      white-space: nowrap;
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────────────────── */
+    @media (max-width: 800px) {
+      #story-wrapper { flex-direction: column; }
+      #map-container { width: 100%; height: 50vh; position: relative; }
+      #scroll-pane   { width: 100%; padding: 4vh 1.5rem 12vh 2.8rem; }
+      #hero { padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ── HERO ──────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div id="hero-bg"></div>
+  <div id="hero-rails">
+    <div class="rail-line"></div>
+    <div class="rail-line"></div>
+    <div class="rail-line"></div>
+  </div>
+  <div id="hero-content">
+    <p class="hero-eyebrow">Seattle · Link Light Rail · 2001 – 2035</p>
+    <h1>Tracks to <span class="accent">Tomorrow</span></h1>
+    <p class="hero-sub">
+      How Sound Transit's Link Light Rail transformed Seattle's neighborhoods — spurring transit-oriented development and reshaping where thousands of people call home.
+    </p>
+    <div class="scroll-cue">Scroll to explore</div>
+  </div>
+</section>
+
+<!-- ── STORY WRAPPER ─────────────────────────────────────────────── -->
+<div id="story-wrapper">
+
+  <!-- Sticky Map -->
+  <div id="map-container">
+    <div id="map"></div>
+    <div class="map-chapter-label" id="map-label">Overview — Link Light Rail System</div>
+
+    <!-- ── MAP LEGEND ──────────────────────────────────────────── -->
+    <div id="map-legend">
+      <div class="legend-title">Map Legend</div>
+      <div class="legend-section">
+        <div class="legend-row"><span class="legend-line" style="background:#4a90d9"></span>1 Line (Central Link)</div>
+        <div class="legend-row"><span class="legend-line" style="background:#e8b84b"></span>2 Line (East Link)</div>
+      </div>
+      <div class="legend-divider"></div>
+      <div class="legend-section">
+        <div class="legend-row"><span class="legend-diamond" style="background:#4a90d9"></span>Station (2009)</div>
+        <div class="legend-row"><span class="legend-diamond" style="background:#7ec8e3"></span>Station (2016)</div>
+        <div class="legend-row"><span class="legend-diamond" style="background:#a3d9ff"></span>Station (2021)</div>
+        <div class="legend-row"><span class="legend-diamond" style="background:#e8b84b"></span>Station (2024–25)</div>
+      </div>
+      <div class="legend-divider" id="legend-housing-div" style="display:none"></div>
+      <div class="legend-section" id="legend-housing" style="display:none">
+        <div class="legend-row"><span class="legend-dot" style="background:#3a7d44"></span>Small MF (5–10 units)</div>
+        <div class="legend-row"><span class="legend-dot" style="background:#6abf69;width:10px;height:10px;border-radius:50%"></span>Medium MF (10–50)</div>
+        <div class="legend-row"><span class="legend-dot" style="background:#e8b84b;width:13px;height:13px;border-radius:50%"></span>Large MF (50+ units)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Pane -->
+  <div id="scroll-pane">
+    <div class="timeline-track"></div>
+
+    <!-- CHAPTER 0: Overview -->
+    <div class="chapter" id="chapter-0" data-chapter="0">
+      <div class="chapter-year">2001 — Present</div>
+      <span class="chapter-tag rail">Light Rail</span>
+      <div class="chapter-card">
+        <h2>A City Decides to Connect</h2>
+        <p>
+          In 1996, King County voters approved Sound Transit's Regional Transit Authority plan. Five years later, the first shovel broke ground on what would become one of the fastest-growing light rail systems in the United States — Link Light Rail.
+        </p>
+        <p style="margin-top:0.75rem;">
+          Today the system spans over 46 stations and 116 miles, stretching from Everett in the north to Tacoma and Redmond. What began as a modest urban connector has become the spine of a regional transformation.
+        </p>
+        <div class="stat-row">
+          <div class="stat"><strong>116</strong>miles of track</div>
+          <div class="stat"><strong>46</strong>stations</div>
+          <div class="stat"><strong>2035</strong>full build-out year</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 1: Central Link opens -->
+    <div class="chapter" id="chapter-1" data-chapter="1">
+      <div class="chapter-year">2009</div>
+      <span class="chapter-tag rail">Phase 1</span>
+      <div class="chapter-card">
+        <h2>Central Link Opens</h2>
+        <p>
+          On July 18, 2009, Central Link opened between Westlake Station in downtown Seattle and Tukwila International Boulevard — 15.6 miles of initial service. Within months, an extension to Sea-Tac Airport followed, connecting the city to its international gateway.
+        </p>
+        <p style="margin-top:0.75rem;">
+          Ridership exceeded initial forecasts, validating the region's appetite for rail. The airport connection alone shifted how residents and visitors moved through the south end.
+        </p>
+        <div class="stat-row">
+          <div class="stat"><strong>15.6mi</strong>opening segment</div>
+          <div class="stat"><strong>13</strong>initial stations</div>
+          <div class="stat"><strong>26K+</strong>daily boardings (yr 1)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 2: TOD awakens -->
+    <div class="chapter" id="chapter-2" data-chapter="2">
+      <div class="chapter-year">2010 – 2016</div>
+      <span class="chapter-tag tod">Transit-Oriented Dev</span>
+      <div class="chapter-card">
+        <h2>The TOD Awakening</h2>
+        <p>
+          Within walking distance of Link stations, a new kind of development calculus emerged. Developers, municipalities, and non-profits began racing to rezone, build mixed-use projects, and create walkable nodes anchored by transit access.
+        </p>
+        <p style="margin-top:0.75rem;">
+          Columbia City, Beacon Hill, and Rainier Avenue corridors saw the earliest surges — neighborhoods with existing community fabric that rail access turbocharged into denser, more economically active places.
+        </p>
+        <div class="stat-row">
+          <div class="stat"><strong>½ mile</strong>TOD influence radius</div>
+          <div class="stat"><strong>Columbia City</strong>early hotspot</div>
+          <div class="stat"><strong>Beacon Hill</strong>early hotspot</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 3: Northgate Link -->
+    <div class="chapter" id="chapter-3" data-chapter="3">
+      <div class="chapter-year">2021</div>
+      <span class="chapter-tag rail">Northgate Extension</span>
+      <div class="chapter-card">
+        <h2>North Seattle Opens Up</h2>
+        <p>
+          The Northgate Link Extension opened October 2, 2021, adding U District, Roosevelt, and Northgate stations. Overnight, the University of Washington to Northgate trip dropped from a 45-minute bus ride to an 8-minute train ride.
+        </p>
+        <p style="margin-top:0.75rem;">
+          The Roosevelt and U District station areas saw some of Seattle's most aggressive upzoning — six-story mixed-use minimum heights within the Urban Village boundaries, catalyzing hundreds of new residential units.
+        </p>
+        <div class="stat-row">
+          <div class="stat"><strong>3</strong>new stations</div>
+          <div class="stat"><strong>8 min</strong>UW → Northgate</div>
+          <div class="stat"><strong>Roosevelt</strong>rapid upzone</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 4: East Link / 2 Line -->
+    <div class="chapter" id="chapter-4" data-chapter="4">
+      <div class="chapter-year">2024</div>
+      <span class="chapter-tag rail">2 Line — East Link</span>
+      <div class="chapter-card">
+        <h2>Crossing the Lake</h2>
+        <p>
+          The 2 Line (East Link) opened in April 2024, crossing Lake Washington on a pontoon bridge to serve Bellevue, Bel-Red, and Redmond — linking Seattle's urban core directly to the Eastside tech corridor for the first time.
+        </p>
+        <p style="margin-top:0.75rem;">
+          On the Seattle side, the 2 Line shares the International District/Chinatown station with the 1 Line, reinforcing one of the city's most transit-dense nodes. The Rainier Valley and Central District neighborhoods visible here have seen sustained multifamily construction pressure as both lines converge nearby.
+        </p>
+        <p style="margin-top:0.75rem; font-size:0.82rem; color:rgba(245,240,232,0.5); font-style:italic;">
+          Note: The housing permit data in this project covers Seattle city limits only. Eastside TOD patterns in Bellevue and Redmond are not represented and would require a separate dataset.
+        </p>
+        <div class="stat-row">
+          <div class="stat"><strong>ID/Chinatown</strong>shared hub</div>
+          <div class="stat"><strong>Lake Washington</strong>pontoon crossing</div>
+          <div class="stat"><strong>2024</strong>opening year</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 5: Housing + Rent Chart -->
+    <div class="chapter" id="chapter-5" data-chapter="5">
+      <div class="chapter-year">2015 – Now</div>
+      <span class="chapter-tag housing">Housing</span>
+      <div class="chapter-card">
+        <h2>Building Near the Tracks</h2>
+        <p>
+          Seattle's Mandatory Housing Affordability (MHA) program, enacted in 2019 following the HALA recommendations, requires developers building in upzoned areas to either include affordable units on-site or pay into an affordable housing fund.
+        </p>
+        <p style="margin-top:0.75rem;">
+          Station areas near Link have disproportionately benefited — and borne the pressure. Rainier Valley communities have pushed for anti-displacement protections as rising rents follow rail investment. The tension between access and affordability is the central housing story of Link's second decade.
+        </p>
+        <div class="stat-row">
+          <div class="stat"><strong>MHA</strong>affordability tool</div>
+          <div class="stat"><strong>Rainier Valley</strong>displacement pressure</div>
+          <div class="stat"><strong>5,000+</strong>MHA units funded</div>
+        </div>
+
+        <!-- Rent Chart -->
+        <div class="rent-chart-wrap">
+          <div class="rent-chart-title">Avg. 1-BR Rent by Neighborhood · 2009 – 2023</div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#4a90d9"></div>Capitol Hill</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#6abf69"></div>Beacon Hill</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#e8b84b"></div>U District</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>Rainier Valley</div>
+          </div>
+          <canvas id="rent-chart"></canvas>
+          <div class="chart-source">
+            Sources: ACS 5-yr estimates; CoStar/BERK via City of Seattle One Seattle Plan EIS (2023);<br>
+            Apartment List neighborhood reports. Rail opening dates from Sound Transit.<br>
+            ⚠ Note: correlation shown — not evidence of causation.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 5b: Before / After -->
+    <div class="chapter" id="chapter-5b" data-chapter="5b">
+      <div class="chapter-year">2009 vs 2023</div>
+      <span class="chapter-tag housing">Before &amp; After</span>
+      <div class="chapter-card">
+        <h2>Neighborhood Rent: Before &amp; After Rail</h2>
+        <p>
+          Drag the slider to compare average 1-bedroom rents in four station-adjacent neighborhoods the year Central Link opened (2009) versus 2023 — after a decade of system expansion and housing pressure.
+        </p>
+        <p style="margin-top:0.75rem; font-size:0.82rem; color:rgba(245,240,232,0.55);">
+          These figures reflect citywide rent trends amplified in transit-proximate neighborhoods. Displacement risk is highest in lower-income communities of color along Rainier Valley where rail investment preceded affordability protections.
+        </p>
+
+        <div style="margin-top:1rem; background:rgba(232,184,75,0.07); border:1px solid rgba(232,184,75,0.2); border-radius:5px; padding:0.85rem 1rem;">
+          <div style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--signal);margin-bottom:0.5rem;">Context &amp; Caveats</div>
+          <p style="font-size:0.78rem;font-weight:300;color:rgba(245,240,232,0.65);line-height:1.7;margin-bottom:0.5rem;">
+            <strong style="color:rgba(245,240,232,0.85);">Inflation accounts for a significant share of this increase.</strong> Adjusting for CPI, real rent growth is roughly half the nominal figures shown. The BLS CPI-U rose approximately 42% between 2009 and 2023 — meaning $1,000 in 2009 rent equates to ~$1,420 in 2023 dollars before any real increase. <a href="https://www.bls.gov/data/inflation_calculator.htm" target="_blank" style="color:var(--signal);text-decoration:none;">BLS Inflation Calculator ↗</a>
+          </p>
+          <p style="font-size:0.78rem;font-weight:300;color:rgba(245,240,232,0.65);line-height:1.7;margin-bottom:0.5rem;">
+            <strong style="color:rgba(245,240,232,0.85);">High demand — not rail alone — drives rents.</strong> The Seattle metro added roughly 350,000 net new jobs between 2010 and 2019 (<a href="https://www.bls.gov/eag/eag.wa_seattle_msa.htm" target="_blank" style="color:var(--signal);text-decoration:none;">BLS Current Employment Statistics ↗</a>), with Amazon alone employing ~50,000 people in Seattle by 2018. Over the same decade, Seattle's population grew 21% — adding over 128,000 residents — making it one of only 14 U.S. cities to grow by 100,000+ in a single census period (<a href="https://www.seattle.gov/opcd/population-and-demographics" target="_blank" style="color:var(--signal);text-decoration:none;">Seattle OPCD / 2020 Census ↗</a>). Less than 30% of Seattle adults were born in Washington state, reflecting how much of this growth came from in-migration (<a href="https://en.wikipedia.org/wiki/Demographics_of_Seattle" target="_blank" style="color:var(--signal);text-decoration:none;">ACS via Census ↗</a>). Increased demand for housing near employment centers would have raised rents with or without transit investment.
+          </p>
+          <p style="font-size:0.78rem;font-weight:300;color:rgba(245,240,232,0.65);line-height:1.7;margin-bottom:0.5rem;">
+            <strong style="color:rgba(245,240,232,0.85);">New housing construction limits rent growth.</strong> Research consistently shows that adding multifamily supply moderates rent increases over time. A 2024 NYU Furman Center study found that increases in housing supply decrease rents or slow rent growth both regionally and in surrounding neighborhoods (<a href="https://www.tandfonline.com/doi/full/10.1080/10511482.2023.2205947" target="_blank" style="color:var(--signal);text-decoration:none;">Housing Policy Debate ↗</a>). A Pew Charitable Trusts analysis found every 10% increase in housing supply correlated with rents growing 5% less (<a href="https://www.pewtrusts.org/en/research-and-analysis/articles/2025/01/more-housing-supply-is-associated-with-lower-rent-growth" target="_blank" style="color:var(--signal);text-decoration:none;">Pew Charitable Trusts ↗</a>). A 2025 study in the Journal of Political Economy found a 1% increase in new supply lowers average rents by 0.19%, equally in high-demand markets (<a href="https://www.journals.uchicago.edu/doi/10.1086/733547" target="_blank" style="color:var(--signal);text-decoration:none;">Journal of Political Economy Macroeconomics ↗</a>). Without the thousands of units built near Link stations, rents in these neighborhoods would likely be higher still.
+          </p>
+          <p style="font-size:0.78rem;font-weight:300;color:rgba(245,240,232,0.65);line-height:1.7;">
+            <strong style="color:rgba(245,240,232,0.85);">Walkable, transit-served neighborhoods are consistently more desirable — and priced accordingly.</strong> Brookings Institution research found that each step up the walkability ladder adds over $300/month to apartment rents on average, nationally (<a href="https://www.walkscore.com/professional/research.php" target="_blank" style="color:var(--signal);text-decoration:none;">Walk Score / Brookings ↗</a>). A study of nearly 1 million home sales across 18 metro areas found homes in highly walkable neighborhoods sold for 23.5% more than comparable car-dependent properties (<a href="https://redfin.com/research/walkability-and-home-values" target="_blank" style="color:var(--signal);text-decoration:none;">Redfin Research ↗</a>). Higher rents near Link stations are partly a reflection of what people are willing to pay for access — not solely a consequence of displacement.
+          </p>
+        </div>
+
+        <div class="before-after-wrap" id="ba-wrap">
+          <!-- Before side -->
+          <div class="ba-side ba-before">
+            <canvas class="ba-canvas" id="ba-before-canvas"></canvas>
+          </div>
+          <!-- After side (clipped) -->
+          <div class="ba-side ba-after" id="ba-after-side">
+            <canvas class="ba-canvas" id="ba-after-canvas"></canvas>
+          </div>
+          <!-- Divider + handle -->
+          <div class="ba-divider" id="ba-divider"></div>
+          <div class="ba-handle" id="ba-handle">
+            <svg viewBox="0 0 16 16"><path d="M5 2l-4 6 4 6M11 2l4 6-4 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          </div>
+          <div class="ba-label ba-label-before">2009 — Rail Opens</div>
+          <div class="ba-label ba-label-after">2023 — Today</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 6: Future -->
+    <div class="chapter" id="chapter-6" data-chapter="6">
+      <div class="chapter-year">2026 – 2035</div>
+      <span class="chapter-tag tod">What's Next</span>
+      <div class="chapter-card">
+        <h2>The System Completes</h2>
+        <p>
+          Extensions to Everett, Tacoma Dome, and Ballard–West Seattle are in design and construction phases. The Ballard extension, in particular, will pass through some of Seattle's densest, most transit-hungry neighborhoods — Interbay, Uptown, and Lower Queen Anne.
+        </p>
+        <p style="margin-top:0.75rem;">
+          Each new segment brings new TOD pressure — and new opportunity. Cities along the spine are updating station area plans, upzoning transit corridors, and negotiating community benefit agreements to ensure growth is equitable.
+        </p>
+        <div class="stat-row">
+          <div class="stat"><strong>Ballard</strong>coming soon</div>
+          <div class="stat"><strong>West Seattle</strong>coming soon</div>
+          <div class="stat"><strong>2035</strong>full network</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /scroll-pane -->
+</div><!-- /story-wrapper -->
+
+<!-- ── OUTRO ──────────────────────────────────────────────────────── -->
+<section id="outro">
+  <h2>Rails Shape Cities</h2>
+  <p>
+    Link Light Rail is more than a transit system — it's a decades-long bet that Seattle can grow denser, more connected, and more equitable. The story is still being written, one station at a time.
+  </p>
+  <p class="source-note">
+    Transit data: Sound Transit. Housing permits: City of Seattle SDCI Open Data.<br/>
+    Demographics &amp; employment: BLS Current Employment Statistics; Seattle OPCD / U.S. Census 2020; ACS 5-yr estimates.<br/>
+    Inflation: BLS CPI-U Inflation Calculator (bls.gov).<br/>
+    Housing supply research: NYU Furman Center / <em>Housing Policy Debate</em> (2024); Pew Charitable Trusts (2025); <em>Journal of Political Economy Macroeconomics</em> (2025).<br/>
+    Walkability premium: Walk Score / Brookings Institution Metropolitan Policy Program; Redfin Research (18-metro study).<br/>
+    Rent estimates: CoStar/BERK via Seattle One Seattle Plan EIS (2023); Apartment List neighborhood reports.<br/>
+    ⚠ This map is an exploratory analysis. Correlation shown does not imply causation.
+  </p>
+</section>
+
+<!-- ── SCRIPTS ────────────────────────────────────────────────────── -->
+<script>
+  // ── MAPBOX TOKEN ─────────────────────────────────────────────────
+  // https://account.mapbox.com/access-tokens/
+  mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN_HERE';
+  // ── CHAPTER CONFIG ───────────────────────────────────────────────
+  const chapters = [
+    {
+      id: 'chapter-0',
+      label: 'Overview — Link Light Rail System',
+      center: [-122.25, 47.58],
+      zoom: 9.8,
+      bearing: -5,
+      pitch: 0,
+    },
+    {
+      id: 'chapter-1',
+      label: 'Phase 1 — Central Link (2009)',
+      center: [-122.305, 47.58],
+      zoom: 10.8,
+      bearing: 10,
+      pitch: 30,
+    },
+    {
+      id: 'chapter-2',
+      label: 'TOD Corridors — Rainier Valley & Beacon Hill',
+      center: [-122.298, 47.545],
+      zoom: 12.5,
+      bearing: -8,
+      pitch: 40,
+    },
+    {
+      id: 'chapter-3',
+      label: 'Northgate Extension (2021)',
+      center: [-122.327, 47.68],
+      zoom: 12.8,
+      bearing: 5,
+      pitch: 35,
+    },
+    {
+      id: 'chapter-4',
+      label: 'East Link / 2 Line — I-90 Crossing & ID Station',
+      center: [-122.295, 47.598],
+      zoom: 12.2,
+      bearing: 15,
+      pitch: 35,
+    },
+    {
+      id: 'chapter-5',
+      label: 'Housing Pressure — Station Area Upzones',
+      center: [-122.295, 47.555],
+      zoom: 12,
+      bearing: 0,
+      pitch: 20,
+    },
+    {
+      id: 'chapter-5b',
+      label: 'Before & After — Rent Near Rail Stations',
+      center: [-122.32, 47.625],
+      zoom: 12.5,
+      bearing: -5,
+      pitch: 30,
+    },
+    {
+      id: 'chapter-6',
+      label: 'Future Extensions — Ballard, West Seattle, Everett',
+      center: [-122.32, 47.64],
+      zoom: 10.2,
+      bearing: -10,
+      pitch: 25,
+    },
+  ];
+
+  // ── STATION DATA (GeoJSON) ────────────────────────────────────────
+  // Replace / extend this with your actual GeoJSON file or API source.
+  // ── DATA FROM LightRails.csv ─────────────────────────────────────
+  const stationsGeoJSON = {"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.296389, 47.816111]}, "properties": {"name": "Lynnwood City Center", "date": "8/30/2024", "year": 2024}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.314722, 47.785556]}, "properties": {"name": "Mountlake Terrace", "date": "8/30/2024", "year": 2024}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.322778, 47.764167]}, "properties": {"name": "Shoreline North", "date": "8/30/2024", "year": 2024}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.325278, 47.736111]}, "properties": {"name": "Shoreline South", "date": "8/30/2024", "year": 2024}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.328056, 47.703056]}, "properties": {"name": "Northgate", "date": "10/2/2021", "year": 2021}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.315556, 47.676667]}, "properties": {"name": "Roosevelt", "date": "10/2/2021", "year": 2021}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.314167, 47.660556]}, "properties": {"name": "U District", "date": "10/2/2021", "year": 2021}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.303889, 47.649722]}, "properties": {"name": "University of Washington", "date": "3/19/2016", "year": 2016}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.320278, 47.618611]}, "properties": {"name": "Capitol Hill", "date": "3/19/2016", "year": 2016}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.337222, 47.611389]}, "properties": {"name": "Westlake", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.331389, 47.602778]}, "properties": {"name": "Pioneer Square", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.328056, 47.598333]}, "properties": {"name": "International District/Chinatown", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.327167, 47.591333]}, "properties": {"name": "Stadium", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.327389, 47.581278]}, "properties": {"name": "SODO", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.311389, 47.579444]}, "properties": {"name": "Beacon Hill", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.297694, 47.576583]}, "properties": {"name": "Mount Baker", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.2925, 47.559444]}, "properties": {"name": "Columbia City", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.281528, 47.537917]}, "properties": {"name": "Othello", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.279361, 47.522611]}, "properties": {"name": "Rainier Beach", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.288056, 47.464167]}, "properties": {"name": "Tukwila/International Boulevard", "date": "7/18/2009", "year": 2009}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.2975, 47.422778]}, "properties": {"name": "Angle Lake", "date": "9/24/2016", "year": 2016}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.294444, 47.389444]}, "properties": {"name": "Kent Des Moines", "date": "12/6/2025", "year": 2025}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.297778, 47.359167]}, "properties": {"name": "Star Lake", "date": "12/6/2025", "year": 2025}}, {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-122.303889, 47.315833]}, "properties": {"name": "Federal Way", "date": "12/6/2025", "year": 2025}}]};
+
+  // ── DATA FROM Seattle_Housing_Dataset (772 multifamily permits) ──
+  const housingData = [{"lat": 47.65708, "lng": -122.36109, "units": 5, "year": 2019, "hood": "North Central", "addr": "4101 3RD AVE NW"}, {"lat": 47.667416, "lng": -122.38351, "units": 5, "year": 2011, "hood": "Ballard", "addr": "5433 LEARY AVE NW"}, {"lat": 47.536472, "lng": -122.26881, "units": 5, "year": 2007, "hood": "Rainier Valley", "addr": "7322 RAINIER AVE S"}, {"lat": 47.534637, "lng": -122.27865, "units": 5, "year": 2021, "hood": "Rainier Valley", "addr": "7520 43RD AVE S"}, {"lat": 47.599854, "lng": -122.30547, "units": 5, "year": 2020, "hood": "Central Area", "addr": "2017 S MAIN ST"}, {"lat": 47.622116, "lng": -122.316025, "units": 5, "year": 2019, "hood": "Capitol Hill", "addr": "403 13TH AVE E"}, {"lat": 47.63632, "lng": -122.34673, "units": 5, "year": 2019, "hood": "Queen Anne", "addr": "1916 5TH AVE N"}, {"lat": 47.65204, "lng": -122.384865, "units": 5, "year": 2015, "hood": "Magnolia", "addr": "2201 W RUFFNER ST"}, {"lat": 47.565395, "lng": -122.29448, "units": 5, "year": 2014, "hood": "Rainier Valley", "addr": "3020 S ADAMS ST"}, {"lat": 47.572823, "lng": -122.29624, "units": 5, "year": 2017, "hood": "Rainier Valley", "addr": "3418 RENTON PL S"}, {"lat": 47.602547, "lng": -122.3062, "units": 5, "year": 2018, "hood": "Central Area", "addr": "2001 E FIR ST"}, {"lat": 47.604828, "lng": -122.319725, "units": 5, "year": 2012, "hood": "Downtown", "addr": "315 10TH AVE"}, {"lat": 47.65237, "lng": -122.35158, "units": 5, "year": 2018, "hood": "North Central", "addr": "3625 EVANSTON AVE N"}, {"lat": 47.643085, "lng": -122.38487, "units": 5, "year": 2017, "hood": "Magnolia", "addr": "2601 22ND AVE W"}, {"lat": 47.62061, "lng": -122.3112, "units": 5, "year": 2017, "hood": "Capitol Hill", "addr": "1600 E THOMAS ST"}, {"lat": 47.532745, "lng": -122.27082, "units": 5, "year": 2008, "hood": "Rainier Valley", "addr": "4838 S CHICAGO ST"}, {"lat": 47.682796, "lng": -122.34615, "units": 5, "year": 2008, "hood": "North Central", "addr": "7404 LINDEN AVE N"}, {"lat": 47.6256, "lng": -122.31787, "units": 5, "year": 2016, "hood": "Capitol Hill", "addr": "708 11TH AVE E"}, {"lat": 47.565525, "lng": -122.386246, "units": 5, "year": 2008, "hood": "West Seattle", "addr": "4134 CALIFORNIA AVE SW"}, {"lat": 47.58903, "lng": -122.31571, "units": 5, "year": 2018, "hood": "Beacon Hill", "addr": "1530 13TH AVE S"}, {"lat": 47.64538, "lng": -122.36115, "units": 5, "year": 2018, "hood": "Queen Anne", "addr": "2825 3RD AVE W"}, {"lat": 47.58871, "lng": -122.31142, "units": 5, "year": 2017, "hood": "Beacon Hill", "addr": "1546 STURGUS AVE S"}, {"lat": 47.536472, "lng": -122.26881, "units": 5, "year": 2007, "hood": "Rainier Valley", "addr": "7322 RAINIER AVE S"}, {"lat": 47.55636, "lng": -122.28865, "units": 5, "year": 2016, "hood": "Rainier Valley", "addr": "5020 35TH AVE S"}, {"lat": 47.63964, "lng": -122.37534, "units": 5, "year": 2011, "hood": "Queen Anne", "addr": "2233 14TH AVE W"}, {"lat": 47.59233, "lng": -122.29521, "units": 5, "year": 2021, "hood": "Central Area", "addr": "2900 S JUDKINS ST"}, {"lat": 47.60733, "lng": -122.304535, "units": 5, "year": 2020, "hood": "Central Area", "addr": "2108 E JAMES ST"}, {"lat": 47.690735, "lng": -122.39568, "units": 5, "year": 2021, "hood": "Northwest", "addr": "8502 30TH AVE NW"}, {"lat": 47.63624, "lng": -122.346954, "units": 5, "year": 2019, "hood": "Queen Anne", "addr": "1918 5TH AVE N"}, {"lat": 47.665596, "lng": -122.28168, "units": 5, "year": 2021, "hood": "Northeast", "addr": "5021 SAND POINT PL NE"}, {"lat": 47.69145, "lng": -122.3056, "units": 5, "year": 2021, "hood": "Northeast", "addr": "8600 21ST PL NE"}, {"lat": 47.683002, "lng": -122.38779, "units": 5, "year": 2018, "hood": "Ballard", "addr": "7359 24TH AVE NW"}, {"lat": 47.612747, "lng": -122.299644, "units": 5, "year": 2023, "hood": "Central Area", "addr": "2505 E UNION ST"}, {"lat": 47.56474, "lng": -122.29286, "units": 5, "year": 2014, "hood": "Rainier Valley", "addr": "4215 RENTON AVE S"}, {"lat": 47.659855, "lng": -122.33586, "units": 5, "year": 2022, "hood": "North Central", "addr": "4322 WALLINGFORD AVE N"}, {"lat": 47.68713, "lng": -122.375656, "units": 5, "year": 2022, "hood": "Ballard", "addr": "8005 mary AVE NW"}, {"lat": 47.54458, "lng": -122.37021, "units": 5, "year": 2012, "hood": "Delridge", "addr": "3000 SW MORGAN ST"}, {"lat": 47.67797, "lng": -122.37333, "units": 5, "year": 2020, "hood": "Ballard", "addr": "1304 NW 67th ST"}, {"lat": 47.566196, "lng": -122.29026, "units": 5, "year": 2010, "hood": "Rainier Valley", "addr": "4075 LETITIA AVE S"}, {"lat": 47.6523, "lng": -122.383736, "units": 5, "year": 2007, "hood": "Magnolia", "addr": "3601 GILMAN AVE W"}, {"lat": 47.62305, "lng": -122.36241, "units": 5, "year": 2018, "hood": "Queen Anne", "addr": "411 W REPUBLICAN ST"}, {"lat": 47.67998, "lng": -122.34754, "units": 5, "year": 2008, "hood": "North Central", "addr": "7011 LINDEN AVE N"}, {"lat": 47.59821, "lng": -122.311424, "units": 5, "year": 2018, "hood": "Central Area", "addr": "1601 S KING ST"}, {"lat": 47.58187, "lng": -122.402466, "units": 5, "year": 2015, "hood": "West Seattle", "addr": "2414 55TH AVE SW"}, {"lat": 47.69125, "lng": -122.305824, "units": 5, "year": 2021, "hood": "Northeast", "addr": "8601 21ST PL NE"}, {"lat": 47.538837, "lng": -122.295105, "units": 5, "year": 2023, "hood": "Beacon Hill", "addr": "2851 S MYRTLE ST"}, {"lat": 47.55654, "lng": -122.2874, "units": 5, "year": 2015, "hood": "Rainier Valley", "addr": "5008 RENTON AVE S"}, {"lat": 47.658752, "lng": -122.3485, "units": 5, "year": 2017, "hood": "North Central", "addr": "800 N MOTOR PL"}, {"lat": 47.722702, "lng": -122.29521, "units": 5, "year": 2019, "hood": "Lake City", "addr": "3021 NE 130TH ST"}, {"lat": 47.660057, "lng": -122.34502, "units": 5, "year": 2023, "hood": "North Central", "addr": "4315 WOODLAND PARK AVE N"}, {"lat": 47.621086, "lng": -122.29834, "units": 5, "year": 2017, "hood": "Central Area", "addr": "230 26TH AVE E"}, {"lat": 47.54099, "lng": -122.371666, "units": 5, "year": 2017, "hood": "Delridge", "addr": "6902 31ST AVE SW"}, {"lat": 47.58903, "lng": -122.31571, "units": 5, "year": 2019, "hood": "Beacon Hill", "addr": "1530 13TH AVE S"}, {"lat": 47.643192, "lng": -122.38485, "units": 5, "year": 2017, "hood": "Magnolia", "addr": "2605 22ND AVE W"}, {"lat": 47.538097, "lng": -122.29437, "units": 5, "year": 2021, "hood": "Beacon Hill", "addr": "7152 BEACON AVE S"}, {"lat": 47.603672, "lng": -122.30868, "units": 5, "year": 2021, "hood": "Central Area", "addr": "1806 E SPRUCE ST"}, {"lat": 47.62441, "lng": -122.31402, "units": 5, "year": 2016, "hood": "Capitol Hill", "addr": "1412 E MERCER ST"}, {"lat": 47.600357, "lng": -122.31059, "units": 5, "year": 2023, "hood": "Central Area", "addr": "215 17TH AVE S"}, {"lat": 47.58883, "lng": -122.30991, "units": 5, "year": 2013, "hood": "Beacon Hill", "addr": "1541 18TH AVE S"}, {"lat": 47.638603, "lng": -122.39859, "units": 5, "year": 2009, "hood": "Magnolia", "addr": "2201 32ND AVE W"}, {"lat": 47.623623, "lng": -122.326454, "units": 5, "year": 2020, "hood": "Capitol Hill", "addr": "516 BELLEVUE AVE E"}, {"lat": 47.539116, "lng": -122.28104, "units": 5, "year": 2021, "hood": "Rainier Valley", "addr": "7029 42ND AVE S"}, {"lat": 47.605064, "lng": -122.30424, "units": 5, "year": 2014, "hood": "Central Area", "addr": "2115 E TERRACE ST"}, {"lat": 47.670437, "lng": -122.37977, "units": 5, "year": 2019, "hood": "Ballard", "addr": "1710 NW 57TH ST"}, {"lat": 47.58159, "lng": -122.40246, "units": 5, "year": 2015, "hood": "West Seattle", "addr": "2424 55TH AVE SW"}, {"lat": 47.71995, "lng": -122.319695, "units": 5, "year": 2012, "hood": "Northgate", "addr": "12545 ROOSEVELT WAY NE"}, {"lat": 47.536472, "lng": -122.26881, "units": 5, "year": 2007, "hood": "Rainier Valley", "addr": "7322 RAINIER AVE S"}, {"lat": 47.637592, "lng": -122.32447, "units": 5, "year": 2012, "hood": "Cascade", "addr": "2024 FRANKLIN AVE E"}, {"lat": 47.71581, "lng": -122.335304, "units": 5, "year": 2017, "hood": "Northgate", "addr": "11764 BURKE AVE N"}, {"lat": 47.684864, "lng": -122.36352, "units": 5, "year": 2021, "hood": "Northwest", "addr": "7703 6TH AVE NW"}, {"lat": 47.697582, "lng": -122.34709, "units": 5, "year": 2018, "hood": "Northwest", "addr": "9430 LINDEN AVE N"}, {"lat": 47.55904, "lng": -122.36322, "units": 5, "year": 2021, "hood": "Delridge", "addr": "4805 DELRIDGE WAY SW"}, {"lat": 47.657608, "lng": -122.34906, "units": 5, "year": 2008, "hood": "North Central", "addr": "715 N 42ND ST"}, {"lat": 47.639614, "lng": -122.38668, "units": 5, "year": 2020, "hood": "Interbay", "addr": "2314 THORNDYKE AVE W"}, {"lat": 47.543205, "lng": -122.3679, "units": 5, "year": 2014, "hood": "Delridge", "addr": "6550 HIGH POINT DR SW"}, {"lat": 47.641975, "lng": -122.37463, "units": 5, "year": 2007, "hood": "Queen Anne", "addr": "2542 14TH AVE W"}, {"lat": 47.691303, "lng": -122.30492, "units": 5, "year": 2021, "hood": "Northeast", "addr": "8600 22ND PL NE"}, {"lat": 47.572556, "lng": -122.30882, "units": 5, "year": 2020, "hood": "Beacon Hill", "addr": "3415 BEACON AVE S"}, {"lat": 47.61747, "lng": -122.31363, "units": 5, "year": 2022, "hood": "Capitol Hill", "addr": "1417 E HOWELL ST"}, {"lat": 47.691406, "lng": -122.305824, "units": 5, "year": 2021, "hood": "Northeast", "addr": "8611 21ST PL NE"}, {"lat": 47.695965, "lng": -122.34823, "units": 5, "year": 2020, "hood": "Northwest", "addr": "738 N 92ND ST"}, {"lat": 47.644993, "lng": -122.326775, "units": 5, "year": 2011, "hood": "Cascade", "addr": "2711 YALE TER E"}, {"lat": 47.65448, "lng": -122.355705, "units": 5, "year": 2014, "hood": "North Central", "addr": "3909 GREENWOOD AVE N"}, {"lat": 47.668045, "lng": -122.368416, "units": 5, "year": 2023, "hood": "Ballard", "addr": "5400 9TH AVE NW"}, {"lat": 47.667637, "lng": -122.31395, "units": 5, "year": 2021, "hood": "University District", "addr": "5240 BROOKLYN AVE NE"}, {"lat": 47.689785, "lng": -122.37227, "units": 5, "year": 2024, "hood": "Ballard", "addr": "8340 13TH AVE NW"}, {"lat": 47.54209, "lng": -122.32141, "units": 5, "year": 2008, "hood": "Greater Duwamish", "addr": "6708 CARLETON AVE S"}, {"lat": 47.565052, "lng": -122.29495, "units": 5, "year": 2013, "hood": "Rainier Valley", "addr": "3031 S ADAMS ST"}, {"lat": 47.61735, "lng": -122.31354, "units": 5, "year": 2022, "hood": "Capitol Hill", "addr": "1427 E HOWELL ST"}, {"lat": 47.558918, "lng": -122.36258, "units": 5, "year": 2020, "hood": "Delridge", "addr": "4810 DELRIDGE WAY SW"}, {"lat": 47.590427, "lng": -122.38572, "units": 5, "year": 2008, "hood": "West Seattle", "addr": "4215 SW ATLANTIC ST"}, {"lat": 47.556374, "lng": -122.288536, "units": 5, "year": 2016, "hood": "Rainier Valley", "addr": "5009 RENTON AVE S"}, {"lat": 47.546154, "lng": -122.36922, "units": 5, "year": 2011, "hood": "Delridge", "addr": "2810 SW BATAAN ST"}, {"lat": 47.550274, "lng": -122.323006, "units": 5, "year": 2015, "hood": "Greater Duwamish", "addr": "801 S ORCAS ST"}, {"lat": 47.540302, "lng": -122.371506, "units": 5, "year": 2017, "hood": "Delridge", "addr": "6930 31ST AVE SW"}, {"lat": 47.562233, "lng": -122.29694, "units": 5, "year": 2007, "hood": "Rainier Valley", "addr": "2804 S COLUMBIAN WAY"}, {"lat": 47.66927, "lng": -122.31694, "units": 5, "year": 2015, "hood": "University District", "addr": "1011 NE 56TH ST"}, {"lat": 47.58482, "lng": -122.313194, "units": 5, "year": 2019, "hood": "Beacon Hill", "addr": "2026 15TH AVE S"}, {"lat": 47.534172, "lng": -122.350716, "units": 5, "year": 2017, "hood": "Delridge", "addr": "7551 12TH AVE SW"}, {"lat": 47.68305, "lng": -122.325836, "units": 5, "year": 2019, "hood": "North Central", "addr": "7435 LATONA AVE NE"}, {"lat": 47.563187, "lng": -122.293365, "units": 5, "year": 2012, "hood": "Rainier Valley", "addr": "3072 S OREGON ST"}, {"lat": 47.566666, "lng": -122.29748, "units": 5, "year": 2014, "hood": "Rainier Valley", "addr": "4061 M L KING JR WAY S"}, {"lat": 47.718105, "lng": -122.31421, "units": 5, "year": 2021, "hood": "Northgate", "addr": "12321 14TH AVE NE"}, {"lat": 47.641804, "lng": -122.32498, "units": 5, "year": 2014, "hood": "Cascade", "addr": "2371 FRANKLIN AVE E"}, {"lat": 47.617718, "lng": -122.30665, "units": 5, "year": 2023, "hood": "Capitol Hill", "addr": "1715 20TH AVE"}, {"lat": 47.60181, "lng": -122.297005, "units": 5, "year": 2017, "hood": "Central Area", "addr": "103 M L KING JR WAY"}, {"lat": 47.705204, "lng": -122.35244, "units": 5, "year": 2016, "hood": "Northwest", "addr": "504 N 105TH ST"}, {"lat": 47.620407, "lng": -122.3028, "units": 5, "year": 2020, "hood": "Capitol Hill", "addr": "201 23RD AVE E"}, {"lat": 47.660297, "lng": -122.399574, "units": 5, "year": 2017, "hood": "Magnolia", "addr": "3228 W GOVERNMENT WAY"}, {"lat": 47.54593, "lng": -122.37066, "units": 5, "year": 2011, "hood": "Delridge", "addr": "3000 SW BATAAN ST"}, {"lat": 47.674004, "lng": -122.37848, "units": 5, "year": 2017, "hood": "Ballard", "addr": "1552 NW 62ND ST"}, {"lat": 47.663723, "lng": -122.34833, "units": 5, "year": 2012, "hood": "North Central", "addr": "804 N 48TH ST"}, {"lat": 47.588566, "lng": -122.304985, "units": 5, "year": 2016, "hood": "Central Area", "addr": "1538 21ST AVE S"}, {"lat": 47.592915, "lng": -122.30776, "units": 5, "year": 2015, "hood": "Central Area", "addr": "1900 S BUSH PL"}, {"lat": 47.659767, "lng": -122.32112, "units": 5, "year": 2011, "hood": "University District", "addr": "4309 7TH AVE NE"}, {"lat": 47.639694, "lng": -122.345116, "units": 5, "year": 2008, "hood": "Queen Anne", "addr": "568 MCGRAW ST"}, {"lat": 47.563198, "lng": -122.294, "units": 5, "year": 2012, "hood": "Rainier Valley", "addr": "3060 S OREGON ST"}, {"lat": 47.62923, "lng": -122.345955, "units": 5, "year": 2008, "hood": "Queen Anne", "addr": "1106 TAYLOR AVE N"}, {"lat": 47.69009, "lng": -122.37226, "units": 5, "year": 2024, "hood": "Ballard", "addr": "8344 13TH AVE NW"}, {"lat": 47.670788, "lng": -122.39259, "units": 5, "year": 2013, "hood": "Ballard", "addr": "5720 28TH AVE NW"}, {"lat": 47.65527, "lng": -122.327065, "units": 5, "year": 2019, "hood": "North Central", "addr": "3935 2ND AVE NE"}, {"lat": 47.51807, "lng": -122.37726, "units": 5, "year": 2020, "hood": "West Seattle", "addr": "9443 35TH AVE SW"}, {"lat": 47.622337, "lng": -122.31654, "units": 5, "year": 2016, "hood": "Capitol Hill", "addr": "410 12TH AVE E"}, {"lat": 47.629414, "lng": -122.32102, "units": 5, "year": 2016, "hood": "Capitol Hill", "addr": "1122 BROADWAY E"}, {"lat": 47.61964, "lng": -122.3033, "units": 5, "year": 2012, "hood": "Capitol Hill", "addr": "136 22ND AVE E"}, {"lat": 47.72365, "lng": -122.35321, "units": 5, "year": 2009, "hood": "Northwest", "addr": "440 N 130TH ST"}, {"lat": 47.544823, "lng": -122.36873, "units": 5, "year": 2011, "hood": "Delridge", "addr": "2810 SW MORGAN ST"}, {"lat": 47.705017, "lng": -122.36563, "units": 5, "year": 2015, "hood": "Northwest", "addr": "701 NW 105TH ST"}, {"lat": 47.66769, "lng": -122.36836, "units": 5, "year": 2022, "hood": "Ballard", "addr": "5312 9TH AVE NW"}, {"lat": 47.625206, "lng": -122.36178, "units": 5, "year": 2017, "hood": "Queen Anne", "addr": "616 4TH AVE W"}, {"lat": 47.59018, "lng": -122.3151, "units": 5, "year": 2017, "hood": "Beacon Hill", "addr": "1322 S ATLANTIC ST"}, {"lat": 47.521175, "lng": -122.35695, "units": 5, "year": 2008, "hood": "Delridge", "addr": "1710 SW BARTON ST"}, {"lat": 47.664005, "lng": -122.353775, "units": 5, "year": 2017, "hood": "North Central", "addr": "4818 PHINNEY AVE N"}, {"lat": 47.690983, "lng": -122.368576, "units": 5, "year": 2008, "hood": "Northwest", "addr": "8509 9TH AVE NW"}, {"lat": 47.555977, "lng": -122.28732, "units": 5, "year": 2015, "hood": "Rainier Valley", "addr": "5036 RENTON AVE S"}, {"lat": 47.55654, "lng": -122.2874, "units": 5, "year": 2015, "hood": "Rainier Valley", "addr": "5006 RENTON AVE S"}, {"lat": 47.56015, "lng": -122.291664, "units": 5, "year": 2022, "hood": "Rainier Valley", "addr": "4721 32ND AVE S"}, {"lat": 47.613865, "lng": -122.30121, "units": 5, "year": 2021, "hood": "Central Area", "addr": "1430 24TH AVE"}, {"lat": 47.563114, "lng": -122.297264, "units": 5, "year": 2009, "hood": "Rainier Valley", "addr": "4343 JILL PL S"}, {"lat": 47.672554, "lng": -122.37857, "units": 5, "year": 2018, "hood": "Ballard", "addr": "1554 NW 60TH ST"}, {"lat": 47.69034, "lng": -122.37382, "units": 5, "year": 2021, "hood": "Ballard", "addr": "8354 14TH AVE NW"}, {"lat": 47.624912, "lng": -122.31704, "units": 5, "year": 2015, "hood": "Capitol Hill", "addr": "621 12TH AVE E"}, {"lat": 47.54006, "lng": -122.38673, "units": 5, "year": 2013, "hood": "West Seattle", "addr": "4250 SW MYRTLE ST"}, {"lat": 47.526333, "lng": -122.32802, "units": 5, "year": 2009, "hood": "Greater Duwamish", "addr": "501 S CLOVERDALE ST"}, {"lat": 47.62509, "lng": -122.30767, "units": 5, "year": 2021, "hood": "Capitol Hill", "addr": "623 19TH AVE E"}, {"lat": 47.59692, "lng": -122.3092, "units": 5, "year": 2018, "hood": "Central Area", "addr": "621 18TH AVE S"}, {"lat": 47.52664, "lng": -122.32214, "units": 5, "year": 2008, "hood": "Greater Duwamish", "addr": "816 S CLOVERDALE ST"}, {"lat": 47.621197, "lng": -122.298096, "units": 5, "year": 2017, "hood": "Central Area", "addr": "2609 E THOMAS ST"}, {"lat": 47.548946, "lng": -122.38752, "units": 5, "year": 2015, "hood": "West Seattle", "addr": "5949 CALIFORNIA AVE SW"}, {"lat": 47.546867, "lng": -122.374466, "units": 5, "year": 2018, "hood": "Delridge", "addr": "3250 SW GRAHAM ST"}, {"lat": 47.671814, "lng": -122.384514, "units": 5, "year": 2015, "hood": "Ballard", "addr": "5902 22ND AVE NW"}, {"lat": 47.59678, "lng": -122.30257, "units": 6, "year": 2014, "hood": "Central Area", "addr": "539 23RD AVE S"}, {"lat": 47.53446, "lng": -122.279366, "units": 6, "year": 2018, "hood": "Rainier Valley", "addr": "7527 43RD AVE S"}, {"lat": 47.690517, "lng": -122.30589, "units": 6, "year": 2022, "hood": "Northeast", "addr": "2020 NE 85TH ST"}, {"lat": 47.681347, "lng": -122.32353, "units": 6, "year": 2019, "hood": "North Central", "addr": "437 NE 73RD ST"}, {"lat": 47.56378, "lng": -122.29311, "units": 6, "year": 2012, "hood": "Rainier Valley", "addr": "4420 31ST AVE S"}, {"lat": 47.58879, "lng": -122.31508, "units": 6, "year": 2019, "hood": "Beacon Hill", "addr": "1539 14TH AVE S"}, {"lat": 47.715405, "lng": -122.295296, "units": 6, "year": 2020, "hood": "Lake City", "addr": "3019 NE 120TH ST"}, {"lat": 47.55915, "lng": -122.36326, "units": 6, "year": 2022, "hood": "Delridge", "addr": "2401 SW EDMUNDS ST"}, {"lat": 47.567097, "lng": -122.38653, "units": 6, "year": 2014, "hood": "West Seattle", "addr": "4044 CALIFORNIA AVE SW"}, {"lat": 47.5432, "lng": -122.38605, "units": 6, "year": 2013, "hood": "West Seattle", "addr": "4202 SW HOLLY ST"}, {"lat": 47.565804, "lng": -122.2962, "units": 6, "year": 2012, "hood": "Rainier Valley", "addr": "4118 M L KING JR WAY S"}, {"lat": 47.645447, "lng": -122.32374, "units": 6, "year": 2008, "hood": "Cascade", "addr": "2731 BOYLSTON AVE E"}, {"lat": 47.675774, "lng": -122.373886, "units": 6, "year": 2021, "hood": "Ballard", "addr": "6415 14TH AVE NW"}, {"lat": 47.616035, "lng": -122.31461, "units": 6, "year": 2015, "hood": "Capitol Hill", "addr": "1623 14TH AVE"}, {"lat": 47.55325, "lng": -122.28209, "units": 6, "year": 2020, "hood": "Rainier Valley", "addr": "3935 S BRANDON ST"}, {"lat": 47.694733, "lng": -122.304344, "units": 6, "year": 2008, "hood": "Northeast", "addr": "9090 RAVENNA AVE NE"}, {"lat": 47.59363, "lng": -122.296394, "units": 6, "year": 2017, "hood": "Central Area", "addr": "930 28TH AVE S"}, {"lat": 47.60283, "lng": -122.31711, "units": 6, "year": 2016, "hood": "Downtown", "addr": "151 12TH AVE"}, {"lat": 47.571434, "lng": -122.29047, "units": 6, "year": 2014, "hood": "Rainier Valley", "addr": "3311 S SPOKANE ST"}, {"lat": 47.533863, "lng": -122.3481, "units": 6, "year": 2019, "hood": "Delridge", "addr": "917 SW HOLDEN ST"}, {"lat": 47.5427, "lng": -122.3869, "units": 6, "year": 2007, "hood": "West Seattle", "addr": "6708 CALIFORNIA AVE SW"}, {"lat": 47.60198, "lng": -122.298515, "units": 6, "year": 2020, "hood": "Central Area", "addr": "2616 E YESLER WAY"}, {"lat": 47.612053, "lng": -122.314514, "units": 6, "year": 2020, "hood": "Central Area", "addr": "1113 14TH AVE"}, {"lat": 47.624405, "lng": -122.31957, "units": 6, "year": 2020, "hood": "Capitol Hill", "addr": "1006 E MERCER ST"}, {"lat": 47.52631, "lng": -122.32705, "units": 6, "year": 2022, "hood": "Greater Duwamish", "addr": "527 S CLOVERDALE ST"}, {"lat": 47.585438, "lng": -122.39835, "units": 6, "year": 2008, "hood": "West Seattle", "addr": "2112 ALKI AVE SW"}, {"lat": 47.553986, "lng": -122.38219, "units": 6, "year": 2019, "hood": "West Seattle", "addr": "3914 SW BRANDON ST"}, {"lat": 47.65132, "lng": -122.34494, "units": 6, "year": 2007, "hood": "North Central", "addr": "3619 ALBION PL N"}, {"lat": 47.586468, "lng": -122.31304, "units": 6, "year": 2022, "hood": "Beacon Hill", "addr": "1500 S HOLGATE ST"}, {"lat": 47.540787, "lng": -122.322525, "units": 6, "year": 2020, "hood": "Greater Duwamish", "addr": "6917 CARLETON AVE S"}, {"lat": 47.53945, "lng": -122.37147, "units": 6, "year": 2017, "hood": "Delridge", "addr": "6968 31ST AVE SW"}, {"lat": 47.543777, "lng": -122.36718, "units": 6, "year": 2014, "hood": "Delridge", "addr": "6590 HIGH POINT DR SW"}, {"lat": 47.654453, "lng": -122.327614, "units": 6, "year": 2017, "hood": "North Central", "addr": "3920 1ST AVE NE"}, {"lat": 47.69322, "lng": -122.35414, "units": 6, "year": 2015, "hood": "Northwest", "addr": "8727 PHINNEY AVE N"}, {"lat": 47.674564, "lng": -122.31893, "units": 6, "year": 2021, "hood": "Northeast", "addr": "6309 9TH AVE NE"}, {"lat": 47.697956, "lng": -122.34047, "units": 6, "year": 2021, "hood": "Northgate", "addr": "1400 N 95TH ST"}, {"lat": 47.690742, "lng": -122.37436, "units": 6, "year": 2016, "hood": "Northwest", "addr": "8501 14TH AVE NW"}, {"lat": 47.661865, "lng": -122.32047, "units": 6, "year": 2013, "hood": "University District", "addr": "4516 7TH AVE NE"}, {"lat": 47.69205, "lng": -122.34053, "units": 6, "year": 2020, "hood": "Northgate", "addr": "8553 INTERLAKE AVE N"}, {"lat": 47.601875, "lng": -122.29851, "units": 6, "year": 2020, "hood": "Central Area", "addr": "2606 E YESLER WAY"}, {"lat": 47.647877, "lng": -122.37842, "units": 6, "year": 2016, "hood": "Interbay", "addr": "3040 17TH AVE W"}, {"lat": 47.693333, "lng": -122.35424, "units": 6, "year": 2015, "hood": "Northwest", "addr": "8731 PHINNEY AVE N"}, {"lat": 47.690945, "lng": -122.378204, "units": 6, "year": 2021, "hood": "Northwest", "addr": "8511 16TH AVE NW"}, {"lat": 47.671192, "lng": -122.37868, "units": 6, "year": 2020, "hood": "Ballard", "addr": "5806 17TH AVE NW"}, {"lat": 47.637104, "lng": -122.38864, "units": 6, "year": 2020, "hood": "Interbay", "addr": "2000 THORNDYKE AVE W"}, {"lat": 47.672913, "lng": -122.38934, "units": 6, "year": 2021, "hood": "Ballard", "addr": "2439 NW 61ST ST"}, {"lat": 47.643784, "lng": -122.325134, "units": 6, "year": 2021, "hood": "Cascade", "addr": "2617 FRANKLIN AVE E"}, {"lat": 47.540794, "lng": -122.32257, "units": 6, "year": 2020, "hood": "Greater Duwamish", "addr": "6915 CARLETON AVE S"}, {"lat": 47.652916, "lng": -122.352585, "units": 6, "year": 2021, "hood": "North Central", "addr": "3635 DAYTON AVE N"}, {"lat": 47.551895, "lng": -122.38191, "units": 6, "year": 2016, "hood": "West Seattle", "addr": "3901 SW FINDLAY ST"}, {"lat": 47.570915, "lng": -122.31449, "units": 6, "year": 2015, "hood": "Beacon Hill", "addr": "1465 S COLUMBIAN WAY"}, {"lat": 47.619736, "lng": -122.30395, "units": 6, "year": 2022, "hood": "Capitol Hill", "addr": "143 22ND AVE E"}, {"lat": 47.610577, "lng": -122.31047, "units": 6, "year": 2021, "hood": "Central Area", "addr": "905 17TH AVE"}, {"lat": 47.58761, "lng": -122.308716, "units": 6, "year": 2019, "hood": "Beacon Hill", "addr": "1811 S STATE ST"}, {"lat": 47.670723, "lng": -122.36887, "units": 6, "year": 2023, "hood": "Ballard", "addr": "901 NW 58TH ST"}, {"lat": 47.587906, "lng": -122.309204, "units": 6, "year": 2020, "hood": "Beacon Hill", "addr": "1716 18TH AVE S"}, {"lat": 47.68246, "lng": -122.32257, "units": 6, "year": 2009, "hood": "North Central", "addr": "7416 5TH AVE NE"}, {"lat": 47.594753, "lng": -122.30254, "units": 6, "year": 2021, "hood": "Central Area", "addr": "2210 S charles ST"}, {"lat": 47.636948, "lng": -122.32756, "units": 6, "year": 2014, "hood": "Cascade", "addr": "90 E NEWTON ST"}, {"lat": 47.60394, "lng": -122.30873, "units": 6, "year": 2021, "hood": "Central Area", "addr": "222 18TH AVE"}, {"lat": 47.658203, "lng": -122.35028, "units": 6, "year": 2007, "hood": "North Central", "addr": "4217 FREMONT AVE N"}, {"lat": 47.690727, "lng": -122.39727, "units": 6, "year": 2016, "hood": "Northwest", "addr": "3102 NW 85TH ST"}, {"lat": 47.600613, "lng": -122.311424, "units": 6, "year": 2023, "hood": "Central Area", "addr": "202 16TH AVE S"}, {"lat": 47.674706, "lng": -122.31902, "units": 6, "year": 2021, "hood": "Northeast", "addr": "6317 9TH AVE NE"}, {"lat": 47.532864, "lng": -122.36456, "units": 6, "year": 2009, "hood": "Delridge", "addr": "2423 SW HOLDEN ST"}, {"lat": 47.580082, "lng": -122.294785, "units": 6, "year": 2018, "hood": "Rainier Valley", "addr": "2530 29TH AVE S"}, {"lat": 47.68189, "lng": -122.28826, "units": 6, "year": 2017, "hood": "Northeast", "addr": "3628 NE 73RD PL"}, {"lat": 47.61997, "lng": -122.30449, "units": 6, "year": 2021, "hood": "Capitol Hill", "addr": "152 21ST AVE E"}, {"lat": 47.66929, "lng": -122.37034, "units": 6, "year": 2022, "hood": "Ballard", "addr": "939 NW 56TH ST"}, {"lat": 47.64069, "lng": -122.320366, "units": 6, "year": 2023, "hood": "Capitol Hill", "addr": "2337 10th AVE E"}, {"lat": 47.58984, "lng": -122.31695, "units": 6, "year": 2019, "hood": "Beacon Hill", "addr": "1201 S ATLANTIC ST"}, {"lat": 47.705204, "lng": -122.34226, "units": 6, "year": 2009, "hood": "Northgate", "addr": "10501 STONE AVE N"}, {"lat": 47.673626, "lng": -122.375084, "units": 6, "year": 2012, "hood": "Ballard", "addr": "1431 NW 62ND ST"}, {"lat": 47.552174, "lng": -122.31328, "units": 6, "year": 2018, "hood": "Beacon Hill", "addr": "5544 15TH AVE S"}, {"lat": 47.58355, "lng": -122.3144, "units": 6, "year": 2023, "hood": "Beacon Hill", "addr": "2204 14TH AVE S"}, {"lat": 47.625015, "lng": -122.3196, "units": 6, "year": 2019, "hood": "Capitol Hill", "addr": "622 10TH AVE E"}, {"lat": 47.57973, "lng": -122.29491, "units": 6, "year": 2018, "hood": "Rainier Valley", "addr": "2540 29TH AVE S"}, {"lat": 47.54369, "lng": -122.36767, "units": 6, "year": 2014, "hood": "Delridge", "addr": "6580 HIGH POINT DR SW"}, {"lat": 47.611362, "lng": -122.311844, "units": 6, "year": 2016, "hood": "Central Area", "addr": "1519 E SPRING ST"}, {"lat": 47.60142, "lng": -122.30354, "units": 6, "year": 2016, "hood": "Central Area", "addr": "104 22ND AVE S"}, {"lat": 47.59112, "lng": -122.31567, "units": 6, "year": 2020, "hood": "Beacon Hill", "addr": "1312 13TH AVE S"}, {"lat": 47.564198, "lng": -122.294685, "units": 6, "year": 2011, "hood": "Rainier Valley", "addr": "3012 S GENESEE ST"}, {"lat": 47.733402, "lng": -122.34275, "units": 6, "year": 2021, "hood": "Northgate", "addr": "14335 STONE AVE N"}, {"lat": 47.592514, "lng": -122.29623, "units": 6, "year": 2013, "hood": "Central Area", "addr": "1131 BRADNER PL S"}, {"lat": 47.65698, "lng": -122.33681, "units": 6, "year": 2023, "hood": "North Central", "addr": "1730 N 41ST ST"}, {"lat": 47.689804, "lng": -122.37252, "units": 6, "year": 2024, "hood": "Ballard", "addr": "8332 13TH AVE NW"}, {"lat": 47.671116, "lng": -122.38852, "units": 6, "year": 2015, "hood": "Ballard", "addr": "2418 NW 58TH ST"}, {"lat": 47.611916, "lng": -122.314476, "units": 6, "year": 2021, "hood": "Central Area", "addr": "1105 14TH AVE"}, {"lat": 47.62779, "lng": -122.35618, "units": 6, "year": 2009, "hood": "Queen Anne", "addr": "916 QUEEN ANNE AVE N"}, {"lat": 47.619915, "lng": -122.29833, "units": 6, "year": 2018, "hood": "Central Area", "addr": "134 26TH AVE E"}, {"lat": 47.62426, "lng": -122.31162, "units": 6, "year": 2012, "hood": "Capitol Hill", "addr": "535 16TH AVE E"}, {"lat": 47.716553, "lng": -122.29255, "units": 6, "year": 2020, "hood": "Lake City", "addr": "12032 33RD AVE NE"}, {"lat": 47.563496, "lng": -122.29301, "units": 6, "year": 2012, "hood": "Rainier Valley", "addr": "4438 31ST AVE S"}, {"lat": 47.6028, "lng": -122.30346, "units": 6, "year": 2020, "hood": "Central Area", "addr": "2200 E FIR ST"}, {"lat": 47.577087, "lng": -122.372116, "units": 6, "year": 2018, "hood": "West Seattle", "addr": "3005 HARBOR AVE SW"}, {"lat": 47.705814, "lng": -122.34255, "units": 6, "year": 2010, "hood": "Northgate", "addr": "1214 N NORTHGATE WAY"}, {"lat": 47.616035, "lng": -122.31461, "units": 6, "year": 2016, "hood": "Capitol Hill", "addr": "1623 14TH AVE"}, {"lat": 47.641373, "lng": -122.32447, "units": 6, "year": 2018, "hood": "Cascade", "addr": "2358 FRANKLIN AVE E"}, {"lat": 47.53308, "lng": -122.36456, "units": 6, "year": 2009, "hood": "Delridge", "addr": "2425 SW HOLDEN ST"}, {"lat": 47.674, "lng": -122.39151, "units": 6, "year": 2021, "hood": "Ballard", "addr": "2630 NW 62ND ST"}, {"lat": 47.53347, "lng": -122.36444, "units": 6, "year": 2009, "hood": "Delridge", "addr": "2427 SW HOLDEN ST"}, {"lat": 47.578857, "lng": -122.29483, "units": 6, "year": 2018, "hood": "Rainier Valley", "addr": "2554 29TH AVE S"}, {"lat": 47.598675, "lng": -122.307106, "units": 6, "year": 2021, "hood": "Central Area", "addr": "1844 S KING ST"}, {"lat": 47.59857, "lng": -122.298035, "units": 6, "year": 2021, "hood": "Central Area", "addr": "417 M L KING JR WAY S"}, {"lat": 47.53308, "lng": -122.36456, "units": 6, "year": 2009, "hood": "Delridge", "addr": "2425 SW HOLDEN ST"}, {"lat": 47.618244, "lng": -122.30589, "units": 6, "year": 2014, "hood": "Capitol Hill", "addr": "1818 20TH AVE"}, {"lat": 47.673645, "lng": -122.379135, "units": 6, "year": 2020, "hood": "Ballard", "addr": "6115 17TH AVE NW"}, {"lat": 47.58809, "lng": -122.31406, "units": 6, "year": 2022, "hood": "Beacon Hill", "addr": "1709 15TH AVE S"}, {"lat": 47.705338, "lng": -122.34244, "units": 6, "year": 2009, "hood": "Northgate", "addr": "1240 N NORTHGATE WAY"}, {"lat": 47.582443, "lng": -122.31311, "units": 6, "year": 2022, "hood": "Beacon Hill", "addr": "2318 15TH AVE S"}, {"lat": 47.66767, "lng": -122.3682, "units": 6, "year": 2023, "hood": "Ballard", "addr": "843 NW 54TH ST"}, {"lat": 47.672203, "lng": -122.389336, "units": 6, "year": 2021, "hood": "Ballard", "addr": "2437 NW 60TH ST"}, {"lat": 47.671547, "lng": -122.31163, "units": 6, "year": 2015, "hood": "University District", "addr": "5720 15TH AVE NE"}, {"lat": 47.564266, "lng": -122.3859, "units": 6, "year": 2021, "hood": "West Seattle", "addr": "4411 42ND AVE SW"}, {"lat": 47.60666, "lng": -122.30409, "units": 6, "year": 2015, "hood": "Central Area", "addr": "515 22ND AVE"}, {"lat": 47.629635, "lng": -122.32519, "units": 6, "year": 2009, "hood": "Capitol Hill", "addr": "1114 LAKEVIEW BLVD E"}, {"lat": 47.705452, "lng": -122.34244, "units": 6, "year": 2009, "hood": "Northgate", "addr": "1234 N NORTHGATE WAY"}, {"lat": 47.62489, "lng": -122.3196, "units": 6, "year": 2019, "hood": "Capitol Hill", "addr": "620 10TH AVE E"}, {"lat": 47.695858, "lng": -122.34756, "units": 6, "year": 2021, "hood": "Northwest", "addr": "9201 LINDEN AVE N"}, {"lat": 47.62171, "lng": -122.31394, "units": 6, "year": 2021, "hood": "Capitol Hill", "addr": "319 MALDEN AVE E"}, {"lat": 47.626118, "lng": -122.35307, "units": 6, "year": 2022, "hood": "Queen Anne", "addr": "165 Valley ST"}, {"lat": 47.653545, "lng": -122.38504, "units": 7, "year": 2021, "hood": "Magnolia", "addr": "3645 22ND AVE W"}, {"lat": 47.603855, "lng": -122.30843, "units": 7, "year": 2021, "hood": "Central Area", "addr": "208 18TH AVE"}, {"lat": 47.679417, "lng": -122.3632, "units": 7, "year": 2020, "hood": "North Central", "addr": "515 NW 70TH ST"}, {"lat": 47.640354, "lng": -122.37523, "units": 7, "year": 2019, "hood": "Queen Anne", "addr": "2265 14TH AVE W"}, {"lat": 47.60401, "lng": -122.30398, "units": 7, "year": 2022, "hood": "Central Area", "addr": "219 22ND AVE"}, {"lat": 47.521362, "lng": -122.357605, "units": 7, "year": 2010, "hood": "Delridge", "addr": "9056 18TH AVE SW"}, {"lat": 47.542473, "lng": -122.387596, "units": 7, "year": 2019, "hood": "West Seattle", "addr": "4300 SW WILLOW ST"}, {"lat": 47.620045, "lng": -122.30189, "units": 7, "year": 2016, "hood": "Capitol Hill", "addr": "2311 E JOHN ST"}, {"lat": 47.58789, "lng": -122.31406, "units": 7, "year": 2022, "hood": "Beacon Hill", "addr": "1717 15TH AVE S"}, {"lat": 47.668087, "lng": -122.36774, "units": 7, "year": 2022, "hood": "Ballard", "addr": "832 NW 54TH ST"}, {"lat": 47.66024, "lng": -122.31956, "units": 7, "year": 2013, "hood": "University District", "addr": "4324 8TH AVE NE"}, {"lat": 47.600594, "lng": -122.305305, "units": 7, "year": 2021, "hood": "Central Area", "addr": "2023 S WASHINGTON ST"}, {"lat": 47.69075, "lng": -122.380264, "units": 7, "year": 2018, "hood": "Northwest", "addr": "1802 NW 85TH ST"}, {"lat": 47.601917, "lng": -122.29974, "units": 7, "year": 2020, "hood": "Central Area", "addr": "102 25TH AVE"}, {"lat": 47.663822, "lng": -122.35248, "units": 7, "year": 2023, "hood": "North Central", "addr": "4802 DAYTON AVE N"}, {"lat": 47.621094, "lng": -122.32505, "units": 7, "year": 2012, "hood": "Capitol Hill", "addr": "306 SUMMIT AVE E"}, {"lat": 47.601852, "lng": -122.31058, "units": 7, "year": 2015, "hood": "Central Area", "addr": "1622 E YESLER WAY"}, {"lat": 47.59201, "lng": -122.29412, "units": 7, "year": 2020, "hood": "Central Area", "addr": "1302 YAKIMA AVE S"}, {"lat": 47.62569, "lng": -122.3614, "units": 7, "year": 2019, "hood": "Queen Anne", "addr": "315 W ROY ST"}, {"lat": 47.536472, "lng": -122.26881, "units": 7, "year": 2007, "hood": "Rainier Valley", "addr": "7322 RAINIER AVE S"}, {"lat": 47.581795, "lng": -122.315796, "units": 7, "year": 2023, "hood": "Beacon Hill", "addr": "2402 13TH AVE S"}, {"lat": 47.690453, "lng": -122.37126, "units": 7, "year": 2019, "hood": "Ballard", "addr": "8364 12TH AVE NW"}, {"lat": 47.664867, "lng": -122.36649, "units": 7, "year": 2020, "hood": "Ballard", "addr": "801 NW 50TH ST"}, {"lat": 47.630207, "lng": -122.32195, "units": 7, "year": 2009, "hood": "Capitol Hill", "addr": "1188 HARVARD AVE E"}, {"lat": 47.679356, "lng": -122.31831, "units": 7, "year": 2022, "hood": "Northeast", "addr": "911 A NE 70TH ST"}, {"lat": 47.564297, "lng": -122.37523, "units": 7, "year": 2014, "hood": "West Seattle", "addr": "3266 SW AVALON WAY"}, {"lat": 47.626453, "lng": -122.34682, "units": 7, "year": 2020, "hood": "Queen Anne", "addr": "516 VALLEY ST"}, {"lat": 47.6748, "lng": -122.3899, "units": 7, "year": 2020, "hood": "Ballard", "addr": "6300 26TH AVE NW"}, {"lat": 47.646755, "lng": -122.36302, "units": 7, "year": 2018, "hood": "Queen Anne", "addr": "418 W BARRETT ST"}, {"lat": 47.66031, "lng": -122.3464, "units": 7, "year": 2021, "hood": "North Central", "addr": "4322 winslow PL N"}, {"lat": 47.662354, "lng": -122.34799, "units": 7, "year": 2021, "hood": "North Central", "addr": "812 N 46TH ST"}, {"lat": 47.669224, "lng": -122.37182, "units": 7, "year": 2019, "hood": "Ballard", "addr": "1121 NW 56TH ST"}, {"lat": 47.668713, "lng": -122.2934, "units": 7, "year": 2021, "hood": "Northeast", "addr": "3106 NE 55TH ST"}, {"lat": 47.654297, "lng": -122.37527, "units": 7, "year": 2015, "hood": "Queen Anne", "addr": "1401 W NICKERSON ST"}, {"lat": 47.676735, "lng": -122.38719, "units": 7, "year": 2021, "hood": "Ballard", "addr": "6522 24TH AVE NW"}, {"lat": 47.6692, "lng": -122.37161, "units": 7, "year": 2019, "hood": "Ballard", "addr": "1117 NW 56TH ST"}, {"lat": 47.660164, "lng": -122.36356, "units": 7, "year": 2018, "hood": "North Central", "addr": "518 NW BRIGHT ST"}, {"lat": 47.619324, "lng": -122.30383, "units": 7, "year": 2017, "hood": "Capitol Hill", "addr": "131 22ND AVE E"}, {"lat": 47.617184, "lng": -122.317825, "units": 7, "year": 2020, "hood": "Capitol Hill", "addr": "1724 11TH AVE"}, {"lat": 47.54808, "lng": -122.287544, "units": 7, "year": 2020, "hood": "Beacon Hill", "addr": "5958 36TH AVE S"}, {"lat": 47.611366, "lng": -122.324554, "units": 7, "year": 2014, "hood": "Downtown", "addr": "1215 SENECA ST"}, {"lat": 47.658745, "lng": -122.313965, "units": 7, "year": 2014, "hood": "University District", "addr": "4210 BROOKLYN AVE NE"}, {"lat": 47.690487, "lng": -122.37379, "units": 7, "year": 2021, "hood": "Ballard", "addr": "1319 NW 85TH ST"}, {"lat": 47.521267, "lng": -122.35732, "units": 7, "year": 2010, "hood": "Delridge", "addr": "9070 18TH AVE SW"}, {"lat": 47.65231, "lng": -122.34635, "units": 7, "year": 2010, "hood": "North Central", "addr": "3655 WHITMAN AVE N"}, {"lat": 47.732937, "lng": -122.34263, "units": 7, "year": 2017, "hood": "Northgate", "addr": "14315 STONE AVE N"}, {"lat": 47.57992, "lng": -122.31641, "units": 7, "year": 2007, "hood": "Beacon Hill", "addr": "2539 13TH AVE S"}, {"lat": 47.60567, "lng": -122.31842, "units": 7, "year": 2012, "hood": "Downtown", "addr": "413 11TH AVE"}, {"lat": 47.585754, "lng": -122.3006, "units": 7, "year": 2021, "hood": "Central Area", "addr": "1917 25TH AVE S"}, {"lat": 47.582077, "lng": -122.373695, "units": 7, "year": 2012, "hood": "West Seattle", "addr": "2371 HARBOR AVE SW"}, {"lat": 47.732426, "lng": -122.343834, "units": 7, "year": 2017, "hood": "Northgate", "addr": "14300 MIDVALE AVE N"}, {"lat": 47.663143, "lng": -122.3517, "units": 7, "year": 2022, "hood": "North Central", "addr": "4701 EVANSTON AVE N"}, {"lat": 47.65949, "lng": -122.349144, "units": 7, "year": 2021, "hood": "North Central", "addr": "718 N 43RD ST"}, {"lat": 47.54781, "lng": -122.38701, "units": 7, "year": 2018, "hood": "West Seattle", "addr": "6024 CALIFORNIA AVE SW"}, {"lat": 47.682407, "lng": -122.32527, "units": 7, "year": 2017, "hood": "North Central", "addr": "7425 4TH AVE NE"}, {"lat": 47.680107, "lng": -122.35507, "units": 7, "year": 2020, "hood": "North Central", "addr": "7020 GREENWOOD AVE N"}, {"lat": 47.69391, "lng": -122.354225, "units": 7, "year": 2018, "hood": "Northwest", "addr": "8755 PHINNEY AVE N"}, {"lat": 47.564354, "lng": -122.3754, "units": 7, "year": 2016, "hood": "West Seattle", "addr": "3268 SW AVALON WAY"}, {"lat": 47.70303, "lng": -122.35899, "units": 7, "year": 2023, "hood": "Northwest", "addr": "10148 HOLMAN RD NW"}, {"lat": 47.664066, "lng": -122.31819, "units": 8, "year": 2016, "hood": "University District", "addr": "4730 9TH AVE NE"}, {"lat": 47.585052, "lng": -122.30085, "units": 8, "year": 2022, "hood": "Central Area", "addr": "2035 25TH AVE S"}, {"lat": 47.629906, "lng": -122.32197, "units": 8, "year": 2009, "hood": "Capitol Hill", "addr": "1178 HARVARD AVE E"}, {"lat": 47.54345, "lng": -122.37132, "units": 8, "year": 2009, "hood": "Delridge", "addr": "6567 SYLVAN WAY SW"}, {"lat": 47.61782, "lng": -122.3158, "units": 8, "year": 2017, "hood": "Capitol Hill", "addr": "1803 13TH AVE"}, {"lat": 47.71568, "lng": -122.29504, "units": 8, "year": 2022, "hood": "Lake City", "addr": "3104 NE 120TH ST"}, {"lat": 47.626038, "lng": -122.32163, "units": 8, "year": 2017, "hood": "Capitol Hill", "addr": "735 BROADWAY E"}, {"lat": 47.52629, "lng": -122.31866, "units": 8, "year": 2021, "hood": "Greater Duwamish", "addr": "1037 S CLOVERDALE ST"}, {"lat": 47.565258, "lng": -122.37259, "units": 8, "year": 2021, "hood": "West Seattle", "addr": "3104 SW AVALON WAY"}, {"lat": 47.543705, "lng": -122.37145, "units": 8, "year": 2009, "hood": "Delridge", "addr": "6551 SYLVAN WAY SW"}, {"lat": 47.65212, "lng": -122.350426, "units": 8, "year": 2021, "hood": "North Central", "addr": "3625 FREMONT AVE N"}, {"lat": 47.57277, "lng": -122.29515, "units": 8, "year": 2011, "hood": "Rainier Valley", "addr": "3340 CLAREMONT AVE S"}, {"lat": 47.6298, "lng": -122.32153, "units": 8, "year": 2009, "hood": "Capitol Hill", "addr": "1175 BROADWAY E"}, {"lat": 47.64121, "lng": -122.325005, "units": 8, "year": 2016, "hood": "Cascade", "addr": "2351 FRANKLIN AVE E"}, {"lat": 47.543907, "lng": -122.37154, "units": 8, "year": 2009, "hood": "Delridge", "addr": "6535 SYLVAN WAY SW"}, {"lat": 47.63021, "lng": -122.32155, "units": 8, "year": 2009, "hood": "Capitol Hill", "addr": "1185 BROADWAY E"}, {"lat": 47.543365, "lng": -122.32122, "units": 8, "year": 2018, "hood": "Greater Duwamish", "addr": "6630 CARLETON AVE S"}, {"lat": 47.6193, "lng": -122.3153, "units": 8, "year": 2013, "hood": "Capitol Hill", "addr": "116 13TH AVE E"}, {"lat": 47.650654, "lng": -122.37595, "units": 8, "year": 2018, "hood": "Queen Anne", "addr": "3406 15TH AVE W"}, {"lat": 47.526287, "lng": -122.31907, "units": 8, "year": 2021, "hood": "Greater Duwamish", "addr": "1027 S CLOVERDALE ST"}, {"lat": 47.62966, "lng": -122.32197, "units": 8, "year": 2009, "hood": "Capitol Hill", "addr": "1168 HARVARD AVE E"}, {"lat": 47.622093, "lng": -122.31871, "units": 8, "year": 2021, "hood": "Capitol Hill", "addr": "1052 E HARRISON ST"}, {"lat": 47.71023, "lng": -122.3327, "units": 8, "year": 2014, "hood": "Northgate", "addr": "2129 N 113TH ST"}, {"lat": 47.676193, "lng": -122.35488, "units": 8, "year": 2022, "hood": "North Central", "addr": "6517 PHINNEY AVE N"}, {"lat": 47.708313, "lng": -122.316154, "units": 8, "year": 2020, "hood": "Northgate", "addr": "10845 11TH AVE NE"}, {"lat": 47.66476, "lng": -122.28377, "units": 8, "year": 2014, "hood": "Northeast", "addr": "4761 41ST AVE NE"}, {"lat": 47.66411, "lng": -122.312935, "units": 8, "year": 2017, "hood": "University District", "addr": "4730 UNIVERSITY WAY NE"}, {"lat": 47.622623, "lng": -122.31756, "units": 8, "year": 2014, "hood": "Capitol Hill", "addr": "422 11TH AVE E"}, {"lat": 47.661007, "lng": -122.33836, "units": 8, "year": 2019, "hood": "North Central", "addr": "4422 WOODLAWN AVE N"}, {"lat": 47.679287, "lng": -122.26178, "units": 8, "year": 2018, "hood": "Northeast", "addr": "6940 62ND AVE NE"}, {"lat": 47.658466, "lng": -122.35138, "units": 8, "year": 2011, "hood": "North Central", "addr": "4223 EVANSTON AVE N"}, {"lat": 47.668076, "lng": -122.369576, "units": 8, "year": 2021, "hood": "Ballard", "addr": "920 NW 54TH ST"}, {"lat": 47.533474, "lng": -122.36472, "units": 8, "year": 2009, "hood": "Delridge", "addr": "2429 SW HOLDEN ST"}, {"lat": 47.704857, "lng": -122.34162, "units": 8, "year": 2020, "hood": "Northgate", "addr": "1307 N NORTHGATE WAY"}, {"lat": 47.731007, "lng": -122.35597, "units": 8, "year": 2020, "hood": "Northwest", "addr": "14013 GREENWOOD AVE N"}, {"lat": 47.66237, "lng": -122.34695, "units": 8, "year": 2019, "hood": "North Central", "addr": "906 N 46TH ST"}, {"lat": 47.65783, "lng": -122.35085, "units": 8, "year": 2021, "hood": "North Central", "addr": "602 N 42ND ST"}, {"lat": 47.704582, "lng": -122.36524, "units": 8, "year": 2022, "hood": "Northwest", "addr": "10429 ALDERBROOK PL NW"}, {"lat": 47.704765, "lng": -122.34161, "units": 8, "year": 2020, "hood": "Northgate", "addr": "1309 N NORTHGATE WAY"}, {"lat": 47.62616, "lng": -122.35131, "units": 8, "year": 2017, "hood": "Queen Anne", "addr": "301 VALLEY ST"}, {"lat": 47.58464, "lng": -122.30121, "units": 8, "year": 2020, "hood": "Central Area", "addr": "2400 S HILL ST"}, {"lat": 47.715717, "lng": -122.29498, "units": 8, "year": 2022, "hood": "Lake City", "addr": "12004 31ST AVE NE"}, {"lat": 47.653732, "lng": -122.35176, "units": 8, "year": 2015, "hood": "North Central", "addr": "3835 EVANSTON AVE N"}, {"lat": 47.64614, "lng": -122.32499, "units": 8, "year": 2016, "hood": "Cascade", "addr": "2820 EASTLAKE AVE E"}, {"lat": 47.62137, "lng": -122.319695, "units": 8, "year": 2020, "hood": "Capitol Hill", "addr": "304 10TH AVE E"}, {"lat": 47.569668, "lng": -122.3873, "units": 8, "year": 2016, "hood": "West Seattle", "addr": "3815 CALIFORNIA AVE SW"}, {"lat": 47.73397, "lng": -122.34269, "units": 8, "year": 2021, "hood": "Northgate", "addr": "14359 STONE AVE N"}, {"lat": 47.583866, "lng": -122.31297, "units": 8, "year": 2020, "hood": "Beacon Hill", "addr": "1508 S WALKER ST"}, {"lat": 47.694374, "lng": -122.34323, "units": 8, "year": 2016, "hood": "Northgate", "addr": "1126 N 90TH ST"}, {"lat": 47.59188, "lng": -122.29805, "units": 8, "year": 2020, "hood": "Central Area", "addr": "2607 S JUDKINS ST"}, {"lat": 47.56599, "lng": -122.28593, "units": 8, "year": 2021, "hood": "Rainier Valley", "addr": "4104 37TH AVE S"}, {"lat": 47.658054, "lng": -122.31902, "units": 8, "year": 2013, "hood": "University District", "addr": "4217 9TH AVE NE"}, {"lat": 47.674263, "lng": -122.36639, "units": 8, "year": 2020, "hood": "Ballard", "addr": "6251 8TH AVE NW"}, {"lat": 47.56536, "lng": -122.37251, "units": 8, "year": 2021, "hood": "West Seattle", "addr": "3088 SW AVALON WAY"}, {"lat": 47.568623, "lng": -122.36036, "units": 8, "year": 2019, "hood": "Delridge", "addr": "3855 21ST AVE SW"}, {"lat": 47.53223, "lng": -122.36007, "units": 8, "year": 2015, "hood": "Delridge", "addr": "7748 DELRIDGE WAY SW"}, {"lat": 47.65211, "lng": -122.35021, "units": 8, "year": 2021, "hood": "North Central", "addr": "3623 FREMONT AVE N"}, {"lat": 47.71012, "lng": -122.3327, "units": 8, "year": 2014, "hood": "Northgate", "addr": "2131 N 113TH ST"}, {"lat": 47.61779, "lng": -122.34525, "units": 8, "year": 2015, "hood": "Downtown", "addr": "500 WALL ST"}, {"lat": 47.695366, "lng": -122.34347, "units": 8, "year": 2014, "hood": "Northgate", "addr": "1123 N 92ND ST"}, {"lat": 47.60062, "lng": -122.31122, "units": 8, "year": 2023, "hood": "Central Area", "addr": "1605 S WASHINGTON ST"}, {"lat": 47.63888, "lng": -122.36929, "units": 8, "year": 2020, "hood": "Queen Anne", "addr": "2143 9TH AVE W"}, {"lat": 47.6914, "lng": -122.344215, "units": 9, "year": 2011, "hood": "Northgate", "addr": "8600 AURORA AVE N"}, {"lat": 47.606457, "lng": -122.304, "units": 9, "year": 2018, "hood": "Central Area", "addr": "507 22ND AVE"}, {"lat": 47.705303, "lng": -122.35206, "units": 9, "year": 2017, "hood": "Northwest", "addr": "526 N 105TH ST"}, {"lat": 47.62167, "lng": -122.3154, "units": 9, "year": 2019, "hood": "Capitol Hill", "addr": "316 13TH AVE E"}, {"lat": 47.536472, "lng": -122.26881, "units": 9, "year": 2007, "hood": "Rainier Valley", "addr": "7322 RAINIER AVE S"}, {"lat": 47.674397, "lng": -122.38502, "units": 9, "year": 2019, "hood": "Ballard", "addr": "2203 NW 63RD ST"}, {"lat": 47.560066, "lng": -122.292175, "units": 9, "year": 2020, "hood": "Rainier Valley", "addr": "4724 31ST AVE S"}, {"lat": 47.63302, "lng": -122.32292, "units": 9, "year": 2018, "hood": "Capitol Hill", "addr": "1515 LAKEVIEW BLVD E"}, {"lat": 47.654137, "lng": -122.3865, "units": 9, "year": 2020, "hood": "Magnolia", "addr": "2300 W EMERSON ST"}, {"lat": 47.536472, "lng": -122.26881, "units": 10, "year": 2007, "hood": "Rainier Valley", "addr": "7322 RAINIER AVE S"}, {"lat": 47.719517, "lng": -122.294785, "units": 10, "year": 2014, "hood": "Lake City", "addr": "12508 LAKE CITY WAY NE"}, {"lat": 47.69088, "lng": -122.3063, "units": 10, "year": 2015, "hood": "Northeast", "addr": "8520 20TH AVE NE"}, {"lat": 47.545467, "lng": -122.369026, "units": 10, "year": 2009, "hood": "Delridge", "addr": "6426 29TH AVE SW"}, {"lat": 47.65385, "lng": -122.35872, "units": 10, "year": 2020, "hood": "North Central", "addr": "3618 2ND AVE NW"}, {"lat": 47.54523, "lng": -122.370705, "units": 10, "year": 2009, "hood": "Delridge", "addr": "6427 30TH AVE SW"}, {"lat": 47.59169, "lng": -122.39139, "units": 10, "year": 2009, "hood": "West Seattle", "addr": "1350 ALKI AVE SW"}, {"lat": 47.6198, "lng": -122.30556, "units": 10, "year": 2020, "hood": "Capitol Hill", "addr": "2010 E JANSEN CT"}, {"lat": 47.623653, "lng": -122.32563, "units": 10, "year": 2017, "hood": "Capitol Hill", "addr": "515 SUMMIT AVE E"}, {"lat": 47.593937, "lng": -122.38888, "units": 10, "year": 2009, "hood": "West Seattle", "addr": "1226 ALKI AVE SW"}, {"lat": 47.623325, "lng": -122.32757, "units": 11, "year": 2014, "hood": "Capitol Hill", "addr": "308 E REPUBLICAN ST"}, {"lat": 47.691727, "lng": -122.34267, "units": 11, "year": 2020, "hood": "Northgate", "addr": "8543 MIDVALE AVE N"}, {"lat": 47.618156, "lng": -122.311714, "units": 12, "year": 2012, "hood": "Capitol Hill", "addr": "1841 16TH AVE"}, {"lat": 47.598553, "lng": -122.31278, "units": 12, "year": 2015, "hood": "Central Area", "addr": "1410 S KING ST"}, {"lat": 47.66786, "lng": -122.313934, "units": 12, "year": 2015, "hood": "University District", "addr": "5246 BROOKLYN AVE NE"}, {"lat": 47.63669, "lng": -122.3889, "units": 12, "year": 2015, "hood": "Interbay", "addr": "1966 THORNDYKE AVE W"}, {"lat": 47.69344, "lng": -122.304375, "units": 12, "year": 2012, "hood": "Northeast", "addr": "2124 NE 89TH ST"}, {"lat": 47.616932, "lng": -122.313614, "units": 12, "year": 2018, "hood": "Capitol Hill", "addr": "1714 14TH AVE"}, {"lat": 47.69147, "lng": -122.34372, "units": 12, "year": 2011, "hood": "Northgate", "addr": "8525 NESBIT AVE N"}, {"lat": 47.56064, "lng": -122.292305, "units": 13, "year": 2017, "hood": "Rainier Valley", "addr": "4700 31ST AVE S"}, {"lat": 47.65377, "lng": -122.34766, "units": 13, "year": 2019, "hood": "North Central", "addr": "3833 AURORA AVE N"}, {"lat": 47.63163, "lng": -122.36026, "units": 13, "year": 2023, "hood": "Queen Anne", "addr": "1406 3RD AVE W"}, {"lat": 47.622353, "lng": -122.31755, "units": 13, "year": 2023, "hood": "Capitol Hill", "addr": "410 11TH AVE E"}, {"lat": 47.569725, "lng": -122.37168, "units": 14, "year": 2021, "hood": "West Seattle", "addr": "3017 SW CHARLESTOWN ST"}, {"lat": 47.659927, "lng": -122.34697, "units": 14, "year": 2017, "hood": "North Central", "addr": "4300 AURORA AVE N"}, {"lat": 47.640755, "lng": -122.344154, "units": 14, "year": 2023, "hood": "Queen Anne", "addr": "2440 DEXTER AVE N"}, {"lat": 47.659317, "lng": -122.32111, "units": 14, "year": 2022, "hood": "University District", "addr": "4263 7TH AVE NE"}, {"lat": 47.59851, "lng": -122.31021, "units": 15, "year": 2023, "hood": "Central Area", "addr": "1626 S KING ST"}, {"lat": 47.540955, "lng": -122.28915, "units": 15, "year": 2008, "hood": "Beacon Hill", "addr": "6821 HOLLY PARK DR S"}, {"lat": 47.704185, "lng": -122.35509, "units": 15, "year": 2013, "hood": "Northwest", "addr": "10316 GREENWOOD AVE N"}, {"lat": 47.598675, "lng": -122.310135, "units": 15, "year": 2023, "hood": "Central Area", "addr": "1629 S JACKSON PL"}, {"lat": 47.61991, "lng": -122.31097, "units": 15, "year": 2015, "hood": "Capitol Hill", "addr": "1600 E JOHN ST"}, {"lat": 47.678288, "lng": -122.261314, "units": 15, "year": 2013, "hood": "Northeast", "addr": "6818 62ND AVE NE"}, {"lat": 47.66219, "lng": -122.31681, "units": 15, "year": 2015, "hood": "University District", "addr": "4537 11TH AVE NE"}, {"lat": 47.564228, "lng": -122.29331, "units": 15, "year": 2012, "hood": "Rainier Valley", "addr": "4400 31ST AVE S"}, {"lat": 47.621464, "lng": -122.325615, "units": 16, "year": 2008, "hood": "Capitol Hill", "addr": "319 SUMMIT AVE E"}, {"lat": 47.602993, "lng": -122.30613, "units": 16, "year": 2013, "hood": "Central Area", "addr": "160 20TH AVE"}, {"lat": 47.65479, "lng": -122.32718, "units": 16, "year": 2007, "hood": "North Central", "addr": "3915 2ND AVE NE"}, {"lat": 47.620377, "lng": -122.32336, "units": 17, "year": 2017, "hood": "Capitol Hill", "addr": "215 BOYLSTON AVE E"}, {"lat": 47.590523, "lng": -122.2921, "units": 18, "year": 2015, "hood": "Rainier Valley", "addr": "1366 31ST AVE S"}, {"lat": 47.531734, "lng": -122.28171, "units": 18, "year": 2008, "hood": "Beacon Hill", "addr": "3936 S KENYON ST"}, {"lat": 47.636837, "lng": -122.3866, "units": 18, "year": 2012, "hood": "Interbay", "addr": "2301 W NEWTON ST"}, {"lat": 47.669193, "lng": -122.31217, "units": 18, "year": 2021, "hood": "University District", "addr": "5521 15TH AVE NE"}, {"lat": 47.66203, "lng": -122.31985, "units": 18, "year": 2020, "hood": "University District", "addr": "4523 8TH AVE NE"}, {"lat": 47.65059, "lng": -122.32161, "units": 18, "year": 2008, "hood": "Capitol Hill", "addr": "3218 EASTLAKE AVE E"}, {"lat": 47.652016, "lng": -122.34171, "units": 18, "year": 2015, "hood": "North Central", "addr": "3651 INTERLAKE AVE N"}, {"lat": 47.669743, "lng": -122.38369, "units": 18, "year": 2013, "hood": "Ballard", "addr": "2034 NW 56TH ST"}, {"lat": 47.69053, "lng": -122.30661, "units": 19, "year": 2019, "hood": "Northeast", "addr": "8500 20TH AVE NE"}, {"lat": 47.699192, "lng": -122.34006, "units": 19, "year": 2021, "hood": "Northgate", "addr": "9545 ASHWORTH AVE N"}, {"lat": 47.609356, "lng": -122.31571, "units": 19, "year": 2007, "hood": "Central Area", "addr": "1220 E COLUMBIA ST"}, {"lat": 47.60297, "lng": -122.310455, "units": 20, "year": 2016, "hood": "Central Area", "addr": "155 17TH AVE"}, {"lat": 47.671143, "lng": -122.386, "units": 20, "year": 2020, "hood": "Ballard", "addr": "2226 NW 58TH ST"}, {"lat": 47.67036, "lng": -122.38313, "units": 20, "year": 2016, "hood": "Ballard", "addr": "2018 NW 57TH ST"}, {"lat": 47.617573, "lng": -122.32392, "units": 20, "year": 2017, "hood": "Capitol Hill", "addr": "611 E HOWELL ST"}, {"lat": 47.60251, "lng": -122.30744, "units": 20, "year": 2021, "hood": "Central Area", "addr": "1901 E FIR ST"}, {"lat": 47.604206, "lng": -122.3192, "units": 20, "year": 2013, "hood": "Downtown", "addr": "220 10TH AVE"}, {"lat": 47.661427, "lng": -122.303345, "units": 20, "year": 2016, "hood": "University District", "addr": "2249 NE 46TH ST"}, {"lat": 47.691727, "lng": -122.34267, "units": 20, "year": 2018, "hood": "Northgate", "addr": "8543 MIDVALE AVE N"}, {"lat": 47.659073, "lng": -122.31953, "units": 20, "year": 2017, "hood": "University District", "addr": "4252 8TH AVE NE"}, {"lat": 47.719864, "lng": -122.292984, "units": 21, "year": 2015, "hood": "Lake City", "addr": "12517 33RD AVE NE"}, {"lat": 47.687042, "lng": -122.34, "units": 21, "year": 2010, "hood": "North Central", "addr": "1400 N 80TH ST"}, {"lat": 47.69215, "lng": -122.37579, "units": 21, "year": 2021, "hood": "Northwest", "addr": "8559 MARY AVE NW"}, {"lat": 47.639908, "lng": -122.32501, "units": 22, "year": 2019, "hood": "Cascade", "addr": "2303 FRANKLIN AVE E"}, {"lat": 47.58655, "lng": -122.31698, "units": 22, "year": 2015, "hood": "Beacon Hill", "addr": "1814 12TH AVE S"}, {"lat": 47.659588, "lng": -122.31955, "units": 22, "year": 2020, "hood": "University District", "addr": "802 NE 43RD ST"}, {"lat": 47.675804, "lng": -122.374886, "units": 22, "year": 2018, "hood": "Ballard", "addr": "1427 NW 65TH ST"}, {"lat": 47.677658, "lng": -122.326416, "units": 22, "year": 2020, "hood": "North Central", "addr": "6870 WOODLAWN AVE NE"}, {"lat": 47.658405, "lng": -122.32113, "units": 23, "year": 2018, "hood": "University District", "addr": "4229 7TH AVE NE"}, {"lat": 47.613514, "lng": -122.323166, "units": 23, "year": 2008, "hood": "Downtown", "addr": "1416 BOYLSTON AVE"}, {"lat": 47.69471, "lng": -122.34269, "units": 23, "year": 2018, "hood": "Northgate", "addr": "1141 N 91ST ST"}, {"lat": 47.626377, "lng": -122.32699, "units": 23, "year": 2008, "hood": "Capitol Hill", "addr": "745 BELLEVUE AVE E"}, {"lat": 47.638096, "lng": -122.3522, "units": 24, "year": 2018, "hood": "Queen Anne", "addr": "219 BOSTON ST"}, {"lat": 47.663025, "lng": -122.32049, "units": 24, "year": 2015, "hood": "University District", "addr": "4558 7TH AVE NE"}, {"lat": 47.619583, "lng": -122.321175, "units": 24, "year": 2015, "hood": "Capitol Hill", "addr": "127 BROADWAY E"}, {"lat": 47.6755, "lng": -122.38696, "units": 24, "year": 2016, "hood": "Ballard", "addr": "2248 NW 64TH ST"}, {"lat": 47.63891, "lng": -122.301575, "units": 24, "year": 2019, "hood": "Capitol Hill", "addr": "2200 24TH AVE E"}, {"lat": 47.566124, "lng": -122.2964, "units": 24, "year": 2012, "hood": "Rainier Valley", "addr": "2961 S DAKOTA ST"}, {"lat": 47.65695, "lng": -122.319534, "units": 24, "year": 2018, "hood": "University District", "addr": "4046 8TH AVE NE"}, {"lat": 47.629856, "lng": -122.35965, "units": 25, "year": 2009, "hood": "Queen Anne", "addr": "202 W HIGHLAND DR"}, {"lat": 47.687737, "lng": -122.3765, "units": 25, "year": 2015, "hood": "Ballard", "addr": "8026 15TH AVE NW"}, {"lat": 47.633194, "lng": -122.36296, "units": 25, "year": 2021, "hood": "Queen Anne", "addr": "1529 4TH AVE W"}, {"lat": 47.686775, "lng": -122.34505, "units": 26, "year": 2022, "hood": "Northwest", "addr": "949 N 80TH ST"}, {"lat": 47.61868, "lng": -122.30909, "units": 26, "year": 2019, "hood": "Capitol Hill", "addr": "1720 E DENNY WAY"}, {"lat": 47.67858, "lng": -122.261734, "units": 26, "year": 2011, "hood": "Northeast", "addr": "6870 62ND AVE NE"}, {"lat": 47.5867, "lng": -122.31693, "units": 26, "year": 2018, "hood": "Beacon Hill", "addr": "1808 12TH AVE S"}, {"lat": 47.677902, "lng": -122.26167, "units": 26, "year": 2011, "hood": "Northeast", "addr": "6800 62ND AVE NE"}, {"lat": 47.65332, "lng": -122.3548, "units": 27, "year": 2017, "hood": "North Central", "addr": "3635 PHINNEY AVE N"}, {"lat": 47.521545, "lng": -122.35954, "units": 28, "year": 2020, "hood": "Delridge", "addr": "9049 20TH AVE SW"}, {"lat": 47.66795, "lng": -122.312195, "units": 28, "year": 2020, "hood": "University District", "addr": "5253 15TH AVE NE"}, {"lat": 47.667038, "lng": -122.284225, "units": 28, "year": 2022, "hood": "Northeast", "addr": "5130 40TH AVE NE"}, {"lat": 47.66184, "lng": -122.308685, "units": 28, "year": 2017, "hood": "University District", "addr": "4519 18TH AVE NE"}, {"lat": 47.55921, "lng": -122.29122, "units": 29, "year": 2016, "hood": "Rainier Valley", "addr": "4790 32ND AVE S"}, {"lat": 47.62386, "lng": -122.31912, "units": 29, "year": 2019, "hood": "Capitol Hill", "addr": "525 FEDERAL AVE E"}, {"lat": 47.603714, "lng": -122.309235, "units": 29, "year": 2021, "hood": "Central Area", "addr": "207 18TH AVE"}, {"lat": 47.541733, "lng": -122.387566, "units": 30, "year": 2015, "hood": "West Seattle", "addr": "6917 CALIFORNIA AVE SW"}, {"lat": 47.674023, "lng": -122.375305, "units": 30, "year": 2018, "hood": "Ballard", "addr": "1436 NW 62ND ST"}, {"lat": 47.678932, "lng": -122.31821, "units": 30, "year": 2013, "hood": "Northeast", "addr": "838 NE 69TH ST"}, {"lat": 47.698376, "lng": -122.341675, "units": 30, "year": 2008, "hood": "Northgate", "addr": "9514 STONE AVE N"}, {"lat": 47.66169, "lng": -122.3433, "units": 30, "year": 2017, "hood": "North Central", "addr": "1240 N MIDVALE PL"}, {"lat": 47.62522, "lng": -122.35708, "units": 30, "year": 2021, "hood": "Queen Anne", "addr": "617 QUEEN ANNE AVE N"}, {"lat": 47.671093, "lng": -122.38799, "units": 31, "year": 2012, "hood": "Ballard", "addr": "5803 24TH AVE NW"}, {"lat": 47.66558, "lng": -122.31157, "units": 31, "year": 2021, "hood": "University District", "addr": "5020 15TH AVE NE"}, {"lat": 47.557228, "lng": -122.285965, "units": 32, "year": 2018, "hood": "Rainier Valley", "addr": "3700 S HUDSON ST"}, {"lat": 47.52218, "lng": -122.35676, "units": 32, "year": 2021, "hood": "Delridge", "addr": "9021 17TH AVE SW"}, {"lat": 47.673306, "lng": -122.37669, "units": 33, "year": 2017, "hood": "Ballard", "addr": "1506 NW 61ST ST"}, {"lat": 47.61728, "lng": -122.303474, "units": 33, "year": 2017, "hood": "Central Area", "addr": "2202 E OLIVE ST"}, {"lat": 47.66445, "lng": -122.30624, "units": 33, "year": 2023, "hood": "University District", "addr": "4746 20TH AVE NE"}, {"lat": 47.623974, "lng": -122.35973, "units": 33, "year": 2015, "hood": "Queen Anne", "addr": "521 2ND AVE W"}, {"lat": 47.66389, "lng": -122.30382, "units": 34, "year": 2017, "hood": "University District", "addr": "4724 22ND AVE NE"}, {"lat": 47.62658, "lng": -122.31772, "units": 34, "year": 2018, "hood": "Capitol Hill", "addr": "750 11TH AVE E"}, {"lat": 47.624416, "lng": -122.31302, "units": 34, "year": 2015, "hood": "Capitol Hill", "addr": "605 15TH AVE E"}, {"lat": 47.616913, "lng": -122.31718, "units": 34, "year": 2018, "hood": "Capitol Hill", "addr": "1715 12TH AVE"}, {"lat": 47.62326, "lng": -122.31435, "units": 35, "year": 2014, "hood": "Capitol Hill", "addr": "1406 E REPUBLICAN ST"}, {"lat": 47.66706, "lng": -122.303696, "units": 35, "year": 2018, "hood": "University District", "addr": "5221 RAVENNA AVE NE"}, {"lat": 47.59719, "lng": -122.31896, "units": 35, "year": 2015, "hood": "Downtown", "addr": "1011 S WELLER ST"}, {"lat": 47.67604, "lng": -122.29223, "units": 36, "year": 2018, "hood": "Northeast", "addr": "3300 NE 65TH ST"}, {"lat": 47.623417, "lng": -122.31964, "units": 36, "year": 2021, "hood": "Capitol Hill", "addr": "506 10TH AVE E"}, {"lat": 47.61941, "lng": -122.31306, "units": 36, "year": 2008, "hood": "Capitol Hill", "addr": "1435 E JOHN CT"}, {"lat": 47.636787, "lng": -122.35736, "units": 36, "year": 2008, "hood": "Queen Anne", "addr": "1929 QUEEN ANNE AVE N"}, {"lat": 47.67724, "lng": -122.291275, "units": 36, "year": 2016, "hood": "Northeast", "addr": "6559 35TH AVE NE"}, {"lat": 47.64865, "lng": -122.37697, "units": 37, "year": 2018, "hood": "Interbay", "addr": "1518 W DRAVUS ST"}, {"lat": 47.666977, "lng": -122.31392, "units": 37, "year": 2017, "hood": "University District", "addr": "5216 BROOKLYN AVE NE"}, {"lat": 47.561275, "lng": -122.38862, "units": 38, "year": 2016, "hood": "West Seattle", "addr": "4400 SW ALASKA ST"}, {"lat": 47.56184, "lng": -122.38837, "units": 38, "year": 2016, "hood": "West Seattle", "addr": "4535 44TH AVE SW"}, {"lat": 47.56382, "lng": -122.31388, "units": 39, "year": 2017, "hood": "Beacon Hill", "addr": "4351 15TH AVE S"}, {"lat": 47.679142, "lng": -122.26275, "units": 39, "year": 2013, "hood": "Northeast", "addr": "6951 62ND AVE NE"}, {"lat": 47.63735, "lng": -122.357254, "units": 39, "year": 2009, "hood": "Queen Anne", "addr": "2103 QUEEN ANNE AVE N"}, {"lat": 47.559715, "lng": -122.29177, "units": 40, "year": 2021, "hood": "Rainier Valley", "addr": "4735 32ND AVE S"}, {"lat": 47.678535, "lng": -122.32278, "units": 40, "year": 2020, "hood": "North Central", "addr": "6820 OSWEGO PL NE"}, {"lat": 47.691803, "lng": -122.37709, "units": 40, "year": 2020, "hood": "Northwest", "addr": "8541 15TH AVE NW"}, {"lat": 47.629227, "lng": -122.34531, "units": 40, "year": 2012, "hood": "Queen Anne", "addr": "566 PROSPECT ST"}, {"lat": 47.621277, "lng": -122.316536, "units": 41, "year": 2019, "hood": "Capitol Hill", "addr": "1202 E THOMAS ST"}, {"lat": 47.619587, "lng": -122.35379, "units": 41, "year": 2012, "hood": "Queen Anne", "addr": "151 JOHN ST"}, {"lat": 47.69809, "lng": -122.3493, "units": 41, "year": 2017, "hood": "Northwest", "addr": "714 N 95TH ST"}, {"lat": 47.521545, "lng": -122.35954, "units": 41, "year": 2017, "hood": "Delridge", "addr": "9049 20TH AVE SW"}, {"lat": 47.62629, "lng": -122.322685, "units": 41, "year": 2018, "hood": "Capitol Hill", "addr": "741 HARVARD AVE E"}, {"lat": 47.612732, "lng": -122.29657, "units": 41, "year": 2019, "hood": "Central Area", "addr": "1141 M L KING JR WAY"}, {"lat": 47.682304, "lng": -122.32403, "units": 42, "year": 2019, "hood": "North Central", "addr": "442 NE MAPLE LEAF PL"}, {"lat": 47.61976, "lng": -122.31468, "units": 42, "year": 2014, "hood": "Capitol Hill", "addr": "133 14TH AVE E"}, {"lat": 47.55961, "lng": -122.29043, "units": 42, "year": 2016, "hood": "Rainier Valley", "addr": "4770 32ND AVE S"}, {"lat": 47.613434, "lng": -122.31643, "units": 42, "year": 2014, "hood": "Capitol Hill", "addr": "1412 12TH AVE"}, {"lat": 47.560074, "lng": -122.29045, "units": 42, "year": 2016, "hood": "Rainier Valley", "addr": "4750 32ND AVE S"}, {"lat": 47.661125, "lng": -122.332085, "units": 43, "year": 2008, "hood": "North Central", "addr": "2205 N 45TH ST"}, {"lat": 47.641743, "lng": -122.34606, "units": 43, "year": 2008, "hood": "Queen Anne", "addr": "2480 BIRCH AVE N"}, {"lat": 47.614975, "lng": -122.32109, "units": 44, "year": 2012, "hood": "Capitol Hill", "addr": "1531 BROADWAY"}, {"lat": 47.62091, "lng": -122.32186, "units": 45, "year": 2015, "hood": "Capitol Hill", "addr": "801 E THOMAS ST"}, {"lat": 47.623013, "lng": -122.32339, "units": 45, "year": 2015, "hood": "Capitol Hill", "addr": "431 BOYLSTON AVE E"}, {"lat": 47.600243, "lng": -122.33509, "units": 45, "year": 2016, "hood": "Downtown", "addr": "80 S MAIN ST"}, {"lat": 47.5627, "lng": -122.385796, "units": 45, "year": 2018, "hood": "West Seattle", "addr": "4505 42ND AVE SW"}, {"lat": 47.691593, "lng": -122.35733, "units": 46, "year": 2009, "hood": "Northwest", "addr": "8623 PALATINE AVE N"}, {"lat": 47.650265, "lng": -122.321915, "units": 46, "year": 2017, "hood": "Capitol Hill", "addr": "3206 HARVARD AVE E"}, {"lat": 47.622158, "lng": -122.324326, "units": 47, "year": 2017, "hood": "Capitol Hill", "addr": "403 BELMONT AVE E"}, {"lat": 47.619743, "lng": -122.31751, "units": 47, "year": 2015, "hood": "Capitol Hill", "addr": "1113 E JOHN ST"}, {"lat": 47.659737, "lng": -122.32044, "units": 47, "year": 2016, "hood": "University District", "addr": "4302 7TH AVE NE"}, {"lat": 47.559883, "lng": -122.28981, "units": 48, "year": 2016, "hood": "Rainier Valley", "addr": "4760 32ND AVE S"}, {"lat": 47.684177, "lng": -122.37655, "units": 48, "year": 2019, "hood": "Ballard", "addr": "7530 15TH AVE NW"}, {"lat": 47.61944, "lng": -122.32627, "units": 48, "year": 2007, "hood": "Capitol Hill", "addr": "124 BELLEVUE AVE E"}, {"lat": 47.622658, "lng": -122.32617, "units": 48, "year": 2013, "hood": "Capitol Hill", "addr": "418 BELLEVUE AVE E"}, {"lat": 47.66993, "lng": -122.38035, "units": 48, "year": 2017, "hood": "Ballard", "addr": "1731 NW 57TH ST"}, {"lat": 47.57883, "lng": -122.387184, "units": 49, "year": 2022, "hood": "West Seattle", "addr": "2715 CALIFORNIA AVE SW"}, {"lat": 47.665546, "lng": -122.31788, "units": 49, "year": 2016, "hood": "University District", "addr": "5019 ROOSEVELT WAY NE"}, {"lat": 47.60826, "lng": -122.311966, "units": 49, "year": 2020, "hood": "Central Area", "addr": "701 16TH AVE"}, {"lat": 47.622932, "lng": -122.33265, "units": 50, "year": 2009, "hood": "Cascade", "addr": "430 MINOR AVE N"}, {"lat": 47.56295, "lng": -122.29526, "units": 50, "year": 2008, "hood": "Rainier Valley", "addr": "2916 S COLUMBIAN WAY"}, {"lat": 47.666157, "lng": -122.314545, "units": 50, "year": 2013, "hood": "University District", "addr": "5043 BROOKLYN AVE NE"}, {"lat": 47.554554, "lng": -122.28142, "units": 50, "year": 2009, "hood": "Rainier Valley", "addr": "5270 RAINIER AVE S"}, {"lat": 47.61941, "lng": -122.31723, "units": 51, "year": 2019, "hood": "Capitol Hill", "addr": "121 12TH AVE E"}, {"lat": 47.67889, "lng": -122.35565, "units": 51, "year": 2007, "hood": "North Central", "addr": "6801 GREENWOOD AVE N"}, {"lat": 47.687576, "lng": -122.37652, "units": 51, "year": 2013, "hood": "Ballard", "addr": "8022 15TH AVE NW"}, {"lat": 47.600582, "lng": -122.30171, "units": 51, "year": 2011, "hood": "Central Area", "addr": "140 23RD AVE S"}, {"lat": 47.663548, "lng": -122.30622, "units": 52, "year": 2020, "hood": "University District", "addr": "4710 20TH AVE NE"}, {"lat": 47.563377, "lng": -122.29448, "units": 52, "year": 2012, "hood": "Rainier Valley", "addr": "4484 M L KING JR WAY S"}, {"lat": 47.64839, "lng": -122.32316, "units": 52, "year": 2009, "hood": "Cascade", "addr": "2946 EASTLAKE AVE E"}, {"lat": 47.61874, "lng": -122.342964, "units": 53, "year": 2009, "hood": "Cascade", "addr": "714 DENNY WAY"}, {"lat": 47.559208, "lng": -122.29043, "units": 54, "year": 2016, "hood": "Rainier Valley", "addr": "4780 32ND AVE S"}, {"lat": 47.658688, "lng": -122.320114, "units": 54, "year": 2021, "hood": "University District", "addr": "4239 8TH AVE NE"}, {"lat": 47.69094, "lng": -122.35298, "units": 55, "year": 2009, "hood": "Northwest", "addr": "424 N 85TH ST"}, {"lat": 47.618225, "lng": -122.32299, "units": 55, "year": 2018, "hood": "Capitol Hill", "addr": "1820 BOYLSTON AVE"}, {"lat": 47.663666, "lng": -122.31451, "units": 56, "year": 2015, "hood": "University District", "addr": "4717 BROOKLYN AVE NE"}, {"lat": 47.618824, "lng": -122.344604, "units": 56, "year": 2010, "hood": "Cascade", "addr": "600 DENNY WAY"}, {"lat": 47.679886, "lng": -122.317894, "units": 56, "year": 2019, "hood": "Northeast", "addr": "7011 ROOSEVELT WAY NE"}, {"lat": 47.617775, "lng": -122.31327, "units": 57, "year": 2018, "hood": "Capitol Hill", "addr": "1420 E HOWELL ST"}, {"lat": 47.636627, "lng": -122.3574, "units": 57, "year": 2012, "hood": "Queen Anne", "addr": "1919 QUEEN ANNE AVE N"}, {"lat": 47.679665, "lng": -122.317665, "units": 57, "year": 2021, "hood": "Northeast", "addr": "7001 ROOSEVELT WAY NE"}, {"lat": 47.56205, "lng": -122.38777, "units": 58, "year": 2017, "hood": "West Seattle", "addr": "4528 44TH AVE SW"}, {"lat": 47.667294, "lng": -122.31164, "units": 58, "year": 2023, "hood": "University District", "addr": "5228 15TH AVE NE"}, {"lat": 47.572983, "lng": -122.29457, "units": 58, "year": 2011, "hood": "Rainier Valley", "addr": "3333 RAINIER AVE S"}, {"lat": 47.605038, "lng": -122.3232, "units": 58, "year": 2018, "hood": "Downtown", "addr": "423 TERRY AVE"}, {"lat": 47.57564, "lng": -122.294365, "units": 60, "year": 2017, "hood": "Rainier Valley", "addr": "2939 S MOUNT BAKER BLVD"}, {"lat": 47.613953, "lng": -122.32414, "units": 60, "year": 2017, "hood": "Downtown", "addr": "601 E PIKE ST"}, {"lat": 47.657257, "lng": -122.32008, "units": 60, "year": 2015, "hood": "University District", "addr": "4055 8TH AVE NE"}, {"lat": 47.65673, "lng": -122.320114, "units": 60, "year": 2016, "hood": "University District", "addr": "4039 8TH AVE NE"}, {"lat": 47.66461, "lng": -122.317184, "units": 60, "year": 2017, "hood": "University District", "addr": "4750 ROOSEVELT WAY NE"}, {"lat": 47.62618, "lng": -122.3276, "units": 61, "year": 2021, "hood": "Capitol Hill", "addr": "736 BELLEVUE PL E"}, {"lat": 47.66185, "lng": -122.29315, "units": 61, "year": 2018, "hood": "Northeast", "addr": "4516 UNION BAY PL NE"}, {"lat": 47.641445, "lng": -122.32496, "units": 61, "year": 2017, "hood": "Cascade", "addr": "2359 FRANKLIN AVE E"}, {"lat": 47.59491, "lng": -122.30972, "units": 61, "year": 2008, "hood": "Central Area", "addr": "843 HIAWATHA PL S"}, {"lat": 47.62543, "lng": -122.32693, "units": 61, "year": 2013, "hood": "Capitol Hill", "addr": "711 BELLEVUE AVE E"}, {"lat": 47.61746, "lng": -122.307144, "units": 61, "year": 2024, "hood": "Capitol Hill", "addr": "1722 19TH AVE"}, {"lat": 47.561893, "lng": -122.377075, "units": 62, "year": 2012, "hood": "West Seattle", "addr": "4600 36TH AVE SW"}, {"lat": 47.67724, "lng": -122.291275, "units": 62, "year": 2016, "hood": "Northeast", "addr": "6559 35TH AVE NE"}, {"lat": 47.678646, "lng": -122.32399, "units": 62, "year": 2017, "hood": "North Central", "addr": "414 NE RAVENNA BLVD"}, {"lat": 47.621605, "lng": -122.35649, "units": 63, "year": 2021, "hood": "Queen Anne", "addr": "320 QUEEN ANNE AVE N"}, {"lat": 47.533478, "lng": -122.26949, "units": 63, "year": 2013, "hood": "Rainier Valley", "addr": "7700 RAINIER AVE S"}, {"lat": 47.66268, "lng": -122.31986, "units": 63, "year": 2009, "hood": "University District", "addr": "4547 8TH AVE NE"}, {"lat": 47.66368, "lng": -122.31556, "units": 63, "year": 2011, "hood": "University District", "addr": "4719 12TH AVE NE"}, {"lat": 47.619213, "lng": -122.309166, "units": 64, "year": 2017, "hood": "Capitol Hill", "addr": "123 18TH AVE E"}, {"lat": 47.662354, "lng": -122.30623, "units": 64, "year": 2019, "hood": "University District", "addr": "4536 20TH AVE NE"}, {"lat": 47.63412, "lng": -122.34263, "units": 65, "year": 2016, "hood": "Cascade", "addr": "1701 DEXTER AVE N"}, {"lat": 47.599518, "lng": -122.33516, "units": 65, "year": 2016, "hood": "Downtown", "addr": "316 ALASKAN WAY S"}, {"lat": 47.731926, "lng": -122.34749, "units": 65, "year": 2010, "hood": "Northwest", "addr": "14200 LINDEN AVE N"}, {"lat": 47.66421, "lng": -122.31778, "units": 66, "year": 2016, "hood": "University District", "addr": "4737 ROOSEVELT WAY NE"}, {"lat": 47.648273, "lng": -122.335754, "units": 66, "year": 2017, "hood": "North Central", "addr": "3400 WALLINGFORD AVE N"}, {"lat": 47.68793, "lng": -122.35578, "units": 66, "year": 2022, "hood": "Northwest", "addr": "8105 GREENWOOD AVE N"}, {"lat": 47.599445, "lng": -122.30496, "units": 68, "year": 2016, "hood": "Central Area", "addr": "2020 S JACKSON ST"}, {"lat": 47.692047, "lng": -122.34322, "units": 68, "year": 2021, "hood": "Northgate", "addr": "8558 NESBIT AVE N"}, {"lat": 47.629932, "lng": -122.32055, "units": 70, "year": 2014, "hood": "Capitol Hill", "addr": "1145 10TH AVE E"}, {"lat": 47.62126, "lng": -122.32173, "units": 70, "year": 2018, "hood": "Capitol Hill", "addr": "802 E THOMAS ST"}, {"lat": 47.623287, "lng": -122.323784, "units": 71, "year": 2014, "hood": "Capitol Hill", "addr": "500 BELMONT AVE E"}, {"lat": 47.658897, "lng": -122.34778, "units": 71, "year": 2014, "hood": "North Central", "addr": "4251 AURORA AVE N"}, {"lat": 47.603386, "lng": -122.31996, "units": 72, "year": 2019, "hood": "Downtown", "addr": "915 E SPRUCE ST"}, {"lat": 47.668865, "lng": -122.283966, "units": 73, "year": 2022, "hood": "Northeast", "addr": "4020 NE 55TH ST"}, {"lat": 47.623665, "lng": -122.3223, "units": 73, "year": 2015, "hood": "Capitol Hill", "addr": "515 HARVARD AVE E"}, {"lat": 47.670437, "lng": -122.37977, "units": 75, "year": 2018, "hood": "Ballard", "addr": "1710 NW 57TH ST"}, {"lat": 47.606434, "lng": -122.32306, "units": 75, "year": 2018, "hood": "Downtown", "addr": "1050 JAMES ST"}, {"lat": 47.66277, "lng": -122.316734, "units": 75, "year": 2015, "hood": "University District", "addr": "4567 11TH AVE NE"}, {"lat": 47.618893, "lng": -122.30508, "units": 75, "year": 2018, "hood": "Capitol Hill", "addr": "111 21ST AVE E"}, {"lat": 47.65642, "lng": -122.32128, "units": 75, "year": 2015, "hood": "University District", "addr": "4029 7TH AVE NE"}, {"lat": 47.62236, "lng": -122.34335, "units": 75, "year": 2020, "hood": "Cascade", "addr": "408 AURORA AVE N"}, {"lat": 47.599434, "lng": -122.29901, "units": 75, "year": 2020, "hood": "Central Area", "addr": "2524 S JACKSON ST"}, {"lat": 47.677456, "lng": -122.31847, "units": 76, "year": 2018, "hood": "Northeast", "addr": "836 NE 67TH ST"}, {"lat": 47.561913, "lng": -122.38513, "units": 76, "year": 2019, "hood": "West Seattle", "addr": "4532 42ND AVE SW"}, {"lat": 47.62367, "lng": -122.36031, "units": 76, "year": 2015, "hood": "Queen Anne", "addr": "500 3RD AVE W"}, {"lat": 47.722176, "lng": -122.29184, "units": 76, "year": 2009, "hood": "Lake City", "addr": "12730 33RD AVE NE"}, {"lat": 47.676025, "lng": -122.31635, "units": 76, "year": 2007, "hood": "Northeast", "addr": "1026 NE 65TH ST"}, {"lat": 47.648273, "lng": -122.335754, "units": 77, "year": 2017, "hood": "North Central", "addr": "1850 N 34TH ST"}, {"lat": 47.61986, "lng": -122.32382, "units": 78, "year": 2015, "hood": "Capitol Hill", "addr": "200 BELMONT AVE E"}, {"lat": 47.67675, "lng": -122.31849, "units": 78, "year": 2019, "hood": "Northeast", "addr": "836 NE 66TH ST"}, {"lat": 47.65702, "lng": -122.320595, "units": 79, "year": 2022, "hood": "University District", "addr": "4048 7TH AVE NE"}, {"lat": 47.676384, "lng": -122.3192, "units": 79, "year": 2022, "hood": "Northeast", "addr": "815 NE 66TH ST"}, {"lat": 47.678204, "lng": -122.3172, "units": 79, "year": 2017, "hood": "Northeast", "addr": "6800 ROOSEVELT WAY NE"}, {"lat": 47.62193, "lng": -122.357666, "units": 79, "year": 2017, "hood": "Queen Anne", "addr": "350 1ST AVE W"}, {"lat": 47.614773, "lng": -122.31249, "units": 80, "year": 2008, "hood": "Capitol Hill", "addr": "1500 E MADISON ST"}, {"lat": 47.563736, "lng": -122.385765, "units": 80, "year": 2016, "hood": "West Seattle", "addr": "4433 42ND AVE SW"}, {"lat": 47.60568, "lng": -122.32735, "units": 80, "year": 2017, "hood": "Downtown", "addr": "710 CHERRY ST"}, {"lat": 47.601395, "lng": -122.33121, "units": 80, "year": 2022, "hood": "Downtown", "addr": "108 2ND AVE S"}, {"lat": 47.675194, "lng": -122.3184, "units": 81, "year": 2018, "hood": "Northeast", "addr": "6404 9TH AVE NE"}, {"lat": 47.675568, "lng": -122.37573, "units": 81, "year": 2023, "hood": "Ballard", "addr": "6400 15TH AVE NW"}, {"lat": 47.709774, "lng": -122.32196, "units": 82, "year": 2022, "hood": "Northgate", "addr": "545 NE 112TH ST"}, {"lat": 47.69061, "lng": -122.31323, "units": 82, "year": 2018, "hood": "Northgate", "addr": "1410 NE 85TH ST"}, {"lat": 47.62272, "lng": -122.332596, "units": 83, "year": 2010, "hood": "Cascade", "addr": "424 MINOR AVE N"}, {"lat": 47.6019, "lng": -122.32183, "units": 83, "year": 2015, "hood": "Downtown", "addr": "820 YESLER WAY"}, {"lat": 47.680336, "lng": -122.32402, "units": 83, "year": 2014, "hood": "North Central", "addr": "7120 WOODLAWN AVE NE"}, {"lat": 47.61845, "lng": -122.35477, "units": 83, "year": 2017, "hood": "Downtown", "addr": "101 DENNY WAY"}, {"lat": 47.707127, "lng": -122.32173, "units": 83, "year": 2019, "hood": "Northgate", "addr": "10715 8TH AVE NE"}, {"lat": 47.62024, "lng": -122.33228, "units": 84, "year": 2013, "hood": "Cascade", "addr": "219 PONTIUS AVE N"}, {"lat": 47.66975, "lng": -122.38515, "units": 84, "year": 2016, "hood": "Ballard", "addr": "5601 22ND AVE NW"}, {"lat": 47.657978, "lng": -122.31411, "units": 84, "year": 2017, "hood": "University District", "addr": "4138 BROOKLYN AVE NE"}, {"lat": 47.615906, "lng": -122.350174, "units": 84, "year": 2010, "hood": "Downtown", "addr": "2630 1ST AVE"}, {"lat": 47.58607, "lng": -122.30447, "units": 85, "year": 2020, "hood": "Beacon Hill", "addr": "1911 22ND AVE S"}, {"lat": 47.720333, "lng": -122.292145, "units": 86, "year": 2011, "hood": "Lake City", "addr": "12536 33RD AVE NE"}, {"lat": 47.705395, "lng": -122.3451, "units": 87, "year": 2013, "hood": "Northwest", "addr": "10507 AURORA AVE N"}, {"lat": 47.647697, "lng": -122.33575, "units": 88, "year": 2017, "hood": "North Central", "addr": "3325 BURKE AVE N"}, {"lat": 47.614304, "lng": -122.31644, "units": 88, "year": 2017, "hood": "Capitol Hill", "addr": "1200 E PIKE ST"}, {"lat": 47.61605, "lng": -122.31651, "units": 88, "year": 2014, "hood": "Capitol Hill", "addr": "1620 12TH AVE"}, {"lat": 47.616905, "lng": -122.3249, "units": 90, "year": 2020, "hood": "Capitol Hill", "addr": "1717 BELMONT AVE"}, {"lat": 47.61508, "lng": -122.32244, "units": 90, "year": 2015, "hood": "Capitol Hill", "addr": "721 E PINE ST"}, {"lat": 47.60074, "lng": -122.30258, "units": 91, "year": 2017, "hood": "Central Area", "addr": "113 23RD AVE S"}, {"lat": 47.571613, "lng": -122.29348, "units": 91, "year": 2018, "hood": "Rainier Valley", "addr": "3501 RAINIER AVE S"}, {"lat": 47.62479, "lng": -122.35241, "units": 93, "year": 2022, "hood": "Queen Anne", "addr": "610 2ND AVE N"}, {"lat": 47.6625, "lng": -122.316765, "units": 94, "year": 2015, "hood": "University District", "addr": "4557 11TH AVE NE"}, {"lat": 47.680046, "lng": -122.37642, "units": 94, "year": 2018, "hood": "Ballard", "addr": "7016 15TH AVE NW"}, {"lat": 47.613514, "lng": -122.34313, "units": 95, "year": 2008, "hood": "Downtown", "addr": "2121 3RD AVE"}, {"lat": 47.574978, "lng": -122.29628, "units": 95, "year": 2020, "hood": "Rainier Valley", "addr": "2870 S HANFORD ST"}, {"lat": 47.622616, "lng": -122.35971, "units": 95, "year": 2021, "hood": "Queen Anne", "addr": "417 2ND AVE W"}, {"lat": 47.65714, "lng": -122.315285, "units": 96, "year": 2015, "hood": "University District", "addr": "4106 12TH AVE NE"}, {"lat": 47.6003, "lng": -122.32846, "units": 96, "year": 2016, "hood": "Downtown", "addr": "442 S MAIN ST"}, {"lat": 47.638927, "lng": -122.37583, "units": 97, "year": 2015, "hood": "Queen Anne", "addr": "2208 15TH AVE W"}, {"lat": 47.659264, "lng": -122.316376, "units": 99, "year": 2019, "hood": "University District", "addr": "4230 11TH AVE NE"}, {"lat": 47.680096, "lng": -122.32433, "units": 99, "year": 2014, "hood": "North Central", "addr": "7104 WOODLAWN AVE NE"}, {"lat": 47.57915, "lng": -122.31103, "units": 100, "year": 2021, "hood": "Beacon Hill", "addr": "2709 17TH AVE S"}, {"lat": 47.624737, "lng": -122.34728, "units": 100, "year": 2007, "hood": "Queen Anne", "addr": "500 MERCER ST"}, {"lat": 47.732456, "lng": -122.346405, "units": 100, "year": 2022, "hood": "Northwest", "addr": "924 N 143RD ST"}, {"lat": 47.578053, "lng": -122.29581, "units": 102, "year": 2023, "hood": "Rainier Valley", "addr": "2800 M L KING JR WAY S"}, {"lat": 47.657566, "lng": -122.31586, "units": 102, "year": 2015, "hood": "University District", "addr": "4123 12TH AVE NE"}, {"lat": 47.556805, "lng": -122.38646, "units": 103, "year": 2014, "hood": "West Seattle", "addr": "5020 CALIFORNIA AVE SW"}, {"lat": 47.603294, "lng": -122.31719, "units": 103, "year": 2022, "hood": "Downtown", "addr": "169 12TH AVE"}, {"lat": 47.59821, "lng": -122.31359, "units": 105, "year": 2020, "hood": "Downtown", "addr": "501 RAINIER AVE S"}, {"lat": 47.61338, "lng": -122.31595, "units": 105, "year": 2012, "hood": "Capitol Hill", "addr": "1222 E MADISON ST"}, {"lat": 47.61993, "lng": -122.34734, "units": 106, "year": 2014, "hood": "Cascade", "addr": "500 JOHN ST"}, {"lat": 47.57954, "lng": -122.300644, "units": 107, "year": 2020, "hood": "Beacon Hill", "addr": "2615 25TH AVE S"}, {"lat": 47.614616, "lng": -122.31442, "units": 108, "year": 2014, "hood": "Capitol Hill", "addr": "1515 14TH AVE"}, {"lat": 47.57775, "lng": -122.387054, "units": 108, "year": 2019, "hood": "West Seattle", "addr": "2749 CALIFORNIA AVE SW"}, {"lat": 47.622124, "lng": -122.332085, "units": 110, "year": 2018, "hood": "Cascade", "addr": "1232 HARRISON ST"}, {"lat": 47.563793, "lng": -122.37457, "units": 111, "year": 2014, "hood": "Delridge", "addr": "3261 SW AVALON WAY"}, {"lat": 47.60053, "lng": -122.31962, "units": 111, "year": 2017, "hood": "Downtown", "addr": "221 10TH AVE S"}, {"lat": 47.619343, "lng": -122.35323, "units": 114, "year": 2017, "hood": "Queen Anne", "addr": "123 2ND AVE N"}, {"lat": 47.70345, "lng": -122.357, "units": 114, "year": 2014, "hood": "Northwest", "addr": "123 N 103RD ST"}, {"lat": 47.68056, "lng": -122.32339, "units": 116, "year": 2014, "hood": "North Central", "addr": "437 NE 72ND ST"}, {"lat": 47.66977, "lng": -122.381546, "units": 117, "year": 2016, "hood": "Ballard", "addr": "1760 NW 56TH ST"}, {"lat": 47.64772, "lng": -122.37698, "units": 117, "year": 2014, "hood": "Interbay", "addr": "3036 16TH AVE W"}, {"lat": 47.559406, "lng": -122.38116, "units": 118, "year": 2019, "hood": "West Seattle", "addr": "4754 FAUNTLEROY WAY SW"}, {"lat": 47.614735, "lng": -122.32103, "units": 118, "year": 2023, "hood": "Capitol Hill", "addr": "1521 BROADWAY"}, {"lat": 47.623837, "lng": -122.331436, "units": 118, "year": 2015, "hood": "Cascade", "addr": "528 PONTIUS AVE N"}, {"lat": 47.523586, "lng": -122.27565, "units": 119, "year": 2023, "hood": "Rainier Valley", "addr": "4524 S HENDERSON ST"}, {"lat": 47.651573, "lng": -122.34232, "units": 119, "year": 2015, "hood": "North Central", "addr": "3636 STONE WAY N"}, {"lat": 47.599415, "lng": -122.32859, "units": 120, "year": 2017, "hood": "Downtown", "addr": "400 S JACKSON ST"}, {"lat": 47.6249, "lng": -122.36554, "units": 123, "year": 2014, "hood": "Queen Anne", "addr": "600 ELLIOTT AVE W"}, {"lat": 47.556816, "lng": -122.285805, "units": 124, "year": 2012, "hood": "Rainier Valley", "addr": "3701 S HUDSON ST"}, {"lat": 47.651413, "lng": -122.3432, "units": 124, "year": 2017, "hood": "North Central", "addr": "3627 STONE WAY N"}, {"lat": 47.597977, "lng": -122.32745, "units": 125, "year": 2016, "hood": "Downtown", "addr": "504 5TH AVE S"}, {"lat": 47.59859, "lng": -122.323, "units": 126, "year": 2023, "hood": "Downtown", "addr": "714 S KING ST"}, {"lat": 47.646267, "lng": -122.36031, "units": 129, "year": 2016, "hood": "Queen Anne", "addr": "2900 3RD AVE W"}, {"lat": 47.67986, "lng": -122.323364, "units": 130, "year": 2017, "hood": "North Central", "addr": "419 NE 71ST ST"}, {"lat": 47.69573, "lng": -122.37336, "units": 131, "year": 2017, "hood": "Northwest", "addr": "9176 HOLMAN RD NW"}, {"lat": 47.61933, "lng": -122.34415, "units": 132, "year": 2017, "hood": "Cascade", "addr": "699 JOHN ST"}, {"lat": 47.664402, "lng": -122.31167, "units": 133, "year": 2018, "hood": "University District", "addr": "4750 15TH AVE NE"}, {"lat": 47.707478, "lng": -122.3225, "units": 134, "year": 2019, "hood": "Northgate", "addr": "10720 5TH AVE NE"}, {"lat": 47.613617, "lng": -122.31853, "units": 135, "year": 2016, "hood": "Capitol Hill", "addr": "1427 11TH AVE"}, {"lat": 47.601086, "lng": -122.31903, "units": 136, "year": 2022, "hood": "Downtown", "addr": "110 10TH AVE S"}, {"lat": 47.574898, "lng": -122.38643, "units": 136, "year": 2016, "hood": "West Seattle", "addr": "3220 CALIFORNIA AVE SW"}, {"lat": 47.614285, "lng": -122.35057, "units": 137, "year": 2015, "hood": "Downtown", "addr": "2521 WESTERN AVE"}, {"lat": 47.67437, "lng": -122.318115, "units": 139, "year": 2023, "hood": "Northeast", "addr": "6300 9TH AVE NE"}, {"lat": 47.621273, "lng": -122.357666, "units": 143, "year": 2018, "hood": "Queen Anne", "addr": "300 1ST AVE W"}, {"lat": 47.609764, "lng": -122.33964, "units": 143, "year": 2009, "hood": "Downtown", "addr": "1521 2ND AVE"}, {"lat": 47.70179, "lng": -122.32353, "units": 143, "year": 2009, "hood": "Northgate", "addr": "10001 5TH AVE NE"}, {"lat": 47.619427, "lng": -122.33755, "units": 145, "year": 2013, "hood": "Cascade", "addr": "975 JOHN ST"}, {"lat": 47.667416, "lng": -122.38351, "units": 146, "year": 2008, "hood": "Ballard", "addr": "5433 LEARY AVE NW"}, {"lat": 47.55977, "lng": -122.38322, "units": 151, "year": 2015, "hood": "West Seattle", "addr": "4745 40TH AVE SW"}, {"lat": 47.728928, "lng": -122.29185, "units": 152, "year": 2011, "hood": "Lake City", "addr": "13716 LAKE CITY WAY NE"}, {"lat": 47.61792, "lng": -122.30501, "units": 157, "year": 2017, "hood": "Capitol Hill", "addr": "2020 E MADISON ST"}, {"lat": 47.615524, "lng": -122.35185, "units": 161, "year": 2017, "hood": "Downtown", "addr": "2716 WESTERN AVE"}, {"lat": 47.662247, "lng": -122.31991, "units": 162, "year": 2014, "hood": "University District", "addr": "4545 8TH AVE NE"}, {"lat": 47.708336, "lng": -122.32257, "units": 163, "year": 2009, "hood": "Northgate", "addr": "507 NE NORTHGATE WAY"}, {"lat": 47.521194, "lng": -122.335495, "units": 163, "year": 2010, "hood": "Delridge", "addr": "9200 2ND AVE SW"}, {"lat": 47.622135, "lng": -122.33284, "units": 166, "year": 2018, "hood": "Cascade", "addr": "1212 HARRISON ST"}, {"lat": 47.611816, "lng": -122.3232, "units": 169, "year": 2016, "hood": "Downtown", "addr": "1321 SENECA ST"}, {"lat": 47.651554, "lng": -122.34436, "units": 171, "year": 2014, "hood": "North Central", "addr": "3635 WOODLAND PARK AVE N"}, {"lat": 47.62337, "lng": -122.330864, "units": 175, "year": 2014, "hood": "Cascade", "addr": "1260 REPUBLICAN ST"}, {"lat": 47.730743, "lng": -122.34725, "units": 178, "year": 2013, "hood": "Northwest", "addr": "14002 LINDEN AVE N"}, {"lat": 47.567097, "lng": -122.3649, "units": 195, "year": 2017, "hood": "Delridge", "addr": "4040 26TH AVE SW"}, {"lat": 47.633003, "lng": -122.32509, "units": 204, "year": 2010, "hood": "Cascade", "addr": "1520 EASTLAKE AVE E"}, {"lat": 47.72235, "lng": -122.29585, "units": 206, "year": 2008, "hood": "Lake City", "addr": "12740 30TH AVE NE"}, {"lat": 47.619213, "lng": -122.33808, "units": 208, "year": 2009, "hood": "Cascade", "addr": "120 WESTLAKE AVE N"}, {"lat": 47.656464, "lng": -122.31815, "units": 209, "year": 2017, "hood": "University District", "addr": "4041 ROOSEVELT WAY NE"}, {"lat": 47.62761, "lng": -122.34212, "units": 234, "year": 2007, "hood": "Cascade", "addr": "912 DEXTER AVE N"}, {"lat": 47.614456, "lng": -122.324196, "units": 249, "year": 2016, "hood": "Capitol Hill", "addr": "600 E PIKE ST"}, {"lat": 47.611053, "lng": -122.34092, "units": 249, "year": 2014, "hood": "Downtown", "addr": "1915 2ND AVE"}, {"lat": 47.676964, "lng": -122.317184, "units": 254, "year": 2022, "hood": "Northeast", "addr": "6620 ROOSEVELT WAY NE"}, {"lat": 47.67745, "lng": -122.31989, "units": 260, "year": 2016, "hood": "Northeast", "addr": "800 NE 67TH ST"}, {"lat": 47.668427, "lng": -122.37835, "units": 260, "year": 2009, "hood": "Ballard", "addr": "1545 NW MARKET ST"}, {"lat": 47.60625, "lng": -122.32643, "units": 267, "year": 2009, "hood": "Downtown", "addr": "710 8TH AVE"}, {"lat": 47.67034, "lng": -122.38732, "units": 268, "year": 2010, "hood": "Ballard", "addr": "5700 24TH AVE NW"}, {"lat": 47.703148, "lng": -122.35605, "units": 269, "year": 2017, "hood": "Northwest", "addr": "10215 GREENWOOD AVE N"}, {"lat": 47.62221, "lng": -122.3356, "units": 282, "year": 2016, "hood": "Cascade", "addr": "400 BOREN AVE N"}, {"lat": 47.66891, "lng": -122.37669, "units": 288, "year": 2014, "hood": "Ballard", "addr": "1500 NW MARKET ST"}, {"lat": 47.622967, "lng": -122.34342, "units": 294, "year": 2017, "hood": "Cascade", "addr": "435 DEXTER AVE N"}, {"lat": 47.623775, "lng": -122.32122, "units": 295, "year": 2010, "hood": "Capitol Hill", "addr": "523 BROADWAY E"}, {"lat": 47.63102, "lng": -122.342865, "units": 296, "year": 2018, "hood": "Cascade", "addr": "1319 DEXTER AVE N"}, {"lat": 47.619358, "lng": -122.33391, "units": 310, "year": 2009, "hood": "Cascade", "addr": "116 FAIRVIEW AVE N"}, {"lat": 47.615894, "lng": -122.333435, "units": 325, "year": 2010, "hood": "Downtown", "addr": "1823 TERRY AVE"}, {"lat": 47.60968, "lng": -122.32979, "units": 335, "year": 2015, "hood": "Downtown", "addr": "802 SENECA ST"}, {"lat": 47.61673, "lng": -122.34338, "units": 348, "year": 2017, "hood": "Downtown", "addr": "583 BATTERY ST"}, {"lat": 47.61673, "lng": -122.34338, "units": 350, "year": 2017, "hood": "Downtown", "addr": "588 BELL ST"}, {"lat": 47.616524, "lng": -122.33737, "units": 355, "year": 2015, "hood": "Downtown", "addr": "2030 8TH AVE"}, {"lat": 47.626778, "lng": -122.34171, "units": 361, "year": 2016, "hood": "Cascade", "addr": "810 DEXTER AVE N"}, {"lat": 47.610996, "lng": -122.32167, "units": 365, "year": 2024, "hood": "Downtown", "addr": "1400 MADISON ST"}, {"lat": 47.630028, "lng": -122.34142, "units": 385, "year": 2017, "hood": "Cascade", "addr": "1207 WESTLAKE AVE N"}, {"lat": 47.732018, "lng": -122.34664, "units": 405, "year": 2010, "hood": "Northwest", "addr": "909 N 143RD ST"}, {"lat": 47.617893, "lng": -122.33944, "units": 450, "year": 2019, "hood": "Downtown", "addr": "2202 8TH AVE"}];
+  const housingGeoJSON = {
+    type: 'FeatureCollection',
+    features: housingData.map(h => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [h.lng, h.lat] },
+      properties: { units: h.units, year: h.year, hood: h.hood, addr: h.addr }
+    }))
+  };
+
+  // ── INIT MAP ─────────────────────────────────────────────────────
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/dark-v11',
+    center: chapters[0].center,
+    zoom: chapters[0].zoom,
+    bearing: chapters[0].bearing,
+    pitch: chapters[0].pitch,
+    interactive: true,
+  });
+
+  map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
+
+  map.on('load', () => {
+
+    // ── 1 LINE: accurate alignment ────────────────────────────────
+    // South: Federal Way → Sea-Tac → Angle Lake → Rainier Beach surface (MLK Jr Way S)
+    // → Beacon Hill tunnel → SODO → downtown tunnel → Capitol Hill tunnel
+    // → Portage Bay tunnel → UW → Northgate → Shoreline → Lynnwood
+    const line1Coords = [
+      // Federal Way south terminus
+      [-122.3039,47.3158],
+      // Star Lake
+      [-122.2978,47.3592],
+      // Kent/Des Moines
+      [-122.2944,47.3894],
+      // Tukwila elevated over I-5/SR 99 corridor
+      [-122.2915,47.4315],[-122.2915,47.4350],
+      // Sea-Tac Airport
+      [-122.2977,47.4448],
+      // Angle Lake
+      [-122.2975,47.4228],
+      // back north — Tukwila International Blvd
+      [-122.2975,47.4228],[-122.2915,47.4650],[-122.2885,47.4693],
+      // Elevated over Duwamish, then surface MLK Jr Way S
+      [-122.2870,47.4900],[-122.2835,47.5020],
+      // Rainier Beach (surface)
+      [-122.2794,47.5226],
+      // Othello (surface MLK Jr Way)
+      [-122.2815,47.5379],
+      // Columbia City (surface)
+      [-122.2925,47.5594],
+      // Mount Baker — jog west from MLK to Rainier Ave
+      [-122.2977,47.5766],
+      // Beacon Hill tunnel portal (east of I-90)
+      [-122.3070,47.5780],[-122.3120,47.5790],
+      // Beacon Hill station (underground)
+      [-122.3114,47.5794],
+      // SODO (surface along 1st Ave S)
+      [-122.3274,47.5801],[-122.3274,47.5850],
+      // Stadium
+      [-122.3272,47.5913],
+      // International District / Chinatown (tunnel entry)
+      [-122.3281,47.5983],
+      // Pioneer Square (tunnel)
+      [-122.3296,47.6003],[-122.3302,47.6025],
+      // University Street / Symphony (tunnel)
+      [-122.3310,47.6060],
+      // Westlake (tunnel)
+      [-122.3367,47.6097],
+      // Capitol Hill tunnel (curves NE under Broadway)
+      [-122.3367,47.6140],[-122.3320,47.6186],[-122.3203,47.6219],
+      // Portage Bay tunnel (curves east under Montlake)
+      [-122.3083,47.6390],[-122.3036,47.6497],
+      // UW Station (emerges at Montlake)
+      [-122.3036,47.6497],
+      // U District (surface/elevated along Brooklyn Ave NE)
+      [-122.3142,47.6606],[-122.3156,47.6645],
+      // Roosevelt (elevated)
+      [-122.3156,47.6760],[-122.3156,47.6820],
+      // Northgate (elevated over I-5)
+      [-122.3281,47.7061],
+      // Elevated north along I-5 corridor
+      [-122.3228,47.7200],[-122.3228,47.7360],
+      // Shoreline South
+      [-122.3253,47.7361],
+      // Shoreline North
+      [-122.3228,47.7642],
+      // Mountlake Terrace
+      [-122.3147,47.7856],
+      // Lynnwood City Center
+      [-122.2964,47.8161],
+    ];
+
+    // ── 2 LINE: accurate alignment ────────────────────────────────
+    // Redmond → Overlake → Bel-Red → Spring District → Bellevue → Mercer Island
+    // → I-90 floating bridge → ID/Chinatown shared station → tunnel to Int'l Dist
+    const line2Coords = [
+      // Redmond Tech
+      [-122.0454,47.6329],
+      // Overlake Village
+      [-122.0617,47.6236],
+      // Bel-Red / 130th
+      [-122.0813,47.6175],
+      // Spring District / 120th
+      [-122.1030,47.6164],
+      // Bellevue Downtown (elevated)
+      [-122.1308,47.6157],[-122.1308,47.6000],
+      // South Bellevue (elevated over I-90)
+      [-122.1666,47.6000],[-122.1666,47.5800],
+      // Mercer Island (I-90 floating bridge)
+      [-122.1869,47.5800],[-122.2200,47.5800],[-122.2500,47.5800],
+      [-122.2750,47.5800],[-122.2900,47.5800],
+      // Connect to I-90 express lanes into downtown Seattle
+      [-122.3050,47.5800],
+      // Shared at International District / Chinatown
+      [-122.3281,47.5983],
+    ];
+
+    map.addSource('line1', {
+      type: 'geojson',
+      data: { type:'Feature', geometry:{ type:'LineString', coordinates: line1Coords } }
+    });
+
+    map.addSource('line2', {
+      type: 'geojson',
+      data: { type:'Feature', geometry:{ type:'LineString', coordinates: line2Coords } }
+    });
+
+    map.addSource('stations', { type: 'geojson', data: stationsGeoJSON });
+
+    // ── DRAW LINES ──────────────────────────────────────────────
+    map.addLayer({
+      id: 'line1-glow',
+      type: 'line',
+      source: 'line1',
+      layout: { 'line-join':'round', 'line-cap':'round' },
+      paint: { 'line-color':'#2b6cb0', 'line-width': 8, 'line-opacity': 0.25, 'line-blur': 6 }
+    });
+    map.addLayer({
+      id: 'line1-main',
+      type: 'line',
+      source: 'line1',
+      layout: { 'line-join':'round', 'line-cap':'round' },
+      paint: { 'line-color':'#4a90d9', 'line-width': 3, 'line-opacity': 0.95 }
+    });
+
+    map.addLayer({
+      id: 'line2-glow',
+      type: 'line',
+      source: 'line2',
+      layout: { 'line-join':'round', 'line-cap':'round' },
+      paint: { 'line-color':'#e8b84b', 'line-width': 8, 'line-opacity': 0.2, 'line-blur': 6 }
+    });
+    map.addLayer({
+      id: 'line2-main',
+      type: 'line',
+      source: 'line2',
+      layout: { 'line-join':'round', 'line-cap':'round' },
+      paint: { 'line-color':'#e8b84b', 'line-width': 3, 'line-opacity': 0.9 }
+    });
+
+    // ── DRAW STATIONS (diamond symbol = rotate square 45°) ──────
+    // Stations start hidden; revealed by year as chapters advance.
+    // Use a symbol layer with a rotated square icon to distinguish from housing circles.
+    map.addLayer({
+      id: 'stations-halo',
+      type: 'circle',
+      source: 'stations',
+      paint: {
+        'circle-radius': 14,
+        'circle-color': 'transparent',
+        'circle-stroke-width': 0,
+        'circle-opacity': 0,
+      }
+    });
+
+    // Diamond shape via circle + thick white stroke (visually distinct from housing dots)
+    map.addLayer({
+      id: 'stations-circle',
+      type: 'circle',
+      source: 'stations',
+      filter: ['==', ['get','year'], -1], // start hidden — updated by setActiveChapter
+      paint: {
+        'circle-radius': ['interpolate',['linear'],['zoom'], 8, 5, 13, 8],
+        'circle-color': [
+          'step', ['get','year'],
+          '#4a90d9',   // ≤ 2009: blue (1 Line original)
+          2016, '#7ec8e3', // 2016 extensions: lighter blue
+          2021, '#a3d9ff', // 2021 Northgate: pale blue
+          2024, '#e8b84b', // 2024 East Link / Lynnwood: gold
+          2025, '#f5d080', // 2025 Federal Way: pale gold
+        ],
+        'circle-stroke-width': 3,
+        'circle-stroke-color': '#ffffff',
+        'circle-opacity': 1,
+        'circle-stroke-opacity': 1,
+        'circle-pitch-alignment': 'map',
+      }
+    });
+
+    // ── HOUSING LAYER ───────────────────────────────────────────────
+    map.addSource('housing', { type: 'geojson', data: housingGeoJSON });
+
+    map.addLayer({
+      id: 'housing-heat',
+      type: 'heatmap',
+      source: 'housing',
+      maxzoom: 13,
+      paint: {
+        'heatmap-weight': ['interpolate',['linear'],['get','units'], 5,0.3, 50,1, 200,2],
+        'heatmap-intensity': ['interpolate',['linear'],['zoom'], 8,0.6, 13,1.5],
+        'heatmap-color': [
+          'interpolate',['linear'],['heatmap-density'],
+          0,'rgba(58,125,68,0)',
+          0.2,'rgba(58,125,68,0.4)',
+          0.5,'rgba(106,191,105,0.7)',
+          0.8,'rgba(232,184,75,0.85)',
+          1,'rgba(255,255,255,0.95)'
+        ],
+        'heatmap-radius': ['interpolate',['linear'],['zoom'], 8,14, 13,24],
+        'heatmap-opacity': 0,
+      }
+    }, 'stations-halo');
+
+    map.addLayer({
+      id: 'housing-dots',
+      type: 'circle',
+      source: 'housing',
+      minzoom: 11,
+      paint: {
+        'circle-radius': ['interpolate',['linear'],['get','units'], 5,3, 30,7, 200,14],
+        'circle-color': ['interpolate',['linear'],['get','units'], 5,'#3a7d44', 30,'#6abf69', 100,'#e8b84b', 200,'#fff'],
+        'circle-opacity': 0,
+        'circle-stroke-width': 0.8,
+        'circle-stroke-color': 'rgba(0,0,0,0.4)',
+        'circle-stroke-opacity': 0,
+      }
+    });
+
+    map.on('click', 'housing-dots', (e) => {
+      const p = e.features[0].properties;
+      const coords = e.features[0].geometry.coordinates.slice();
+      new mapboxgl.Popup({ closeOnClick: true, offset: 8 })
+        .setLngLat(coords)
+        .setHTML('<strong>' + p.units + ' units</strong><br/>' + p.addr + '<br/><span style="color:#8a8f99;font-size:0.65rem;">' + p.hood + ' \u00b7 ' + p.year + '</span>')
+        .addTo(map);
+    });
+    map.on('mouseenter','housing-dots',() => map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','housing-dots',() => map.getCanvas().style.cursor='');
+
+    // ── STATION POPUPS ──────────────────────────────────────────
+    map.on('click', 'stations-circle', (e) => {
+      const props = e.features[0].properties;
+      const coords = e.features[0].geometry.coordinates.slice();
+      const todBadge = props.tod ? '<br/><span style="color:#6abf69;font-size:0.6rem;letter-spacing:0.1em;">● TOD STATION</span>' : '';
+      new mapboxgl.Popup({ closeOnClick: true, offset: 12 })
+        .setLngLat(coords)
+        .setHTML('<strong>' + props.name + '</strong><br/>Opened ' + props.date)
+        .addTo(map);
+    });
+
+    map.on('mouseenter', 'stations-circle', () => map.getCanvas().style.cursor = 'pointer');
+    map.on('mouseleave', 'stations-circle', () => map.getCanvas().style.cursor = '');
+
+  }); // end map.on('load')
+
+  // ── SCROLL DRIVER ────────────────────────────────────────────────
+  const progressBar = document.getElementById('progress-bar');
+  const mapLabel    = document.getElementById('map-label');
+  const chapterEls  = document.querySelectorAll('.chapter');
+
+  let activeChapterIndex = -1;
+
+  function setActiveChapter(index) {
+    if (index === activeChapterIndex) return;
+    activeChapterIndex = index;
+
+    // update chapter card styles
+    chapterEls.forEach((el, i) => el.classList.toggle('is-active', i === index));
+
+    // fly map
+    const cfg = chapters[index];
+    map.flyTo({
+      center:  cfg.center,
+      zoom:    cfg.zoom,
+      bearing: cfg.bearing,
+      pitch:   cfg.pitch,
+      duration: 1800,
+      essential: true,
+    });
+
+    // toggle housing layers — appear from chapter 2 (TOD) onward
+    const showHousing = index >= 2;
+    const heatOpacity = showHousing ? (index >= 5 ? 0.85 : 0.55) : 0;
+    const dotOpacity  = showHousing ? 0.85 : 0;
+    if (map.getLayer && map.getLayer('housing-heat')) {
+      map.setPaintProperty('housing-heat', 'heatmap-opacity', heatOpacity);
+      map.setPaintProperty('housing-dots', 'circle-opacity', dotOpacity);
+      map.setPaintProperty('housing-dots', 'circle-stroke-opacity', dotOpacity);
+    }
+    // show/hide housing legend
+    const hLegend = document.getElementById('legend-housing');
+    const hDiv    = document.getElementById('legend-housing-div');
+    if (hLegend) { hLegend.style.display = showHousing ? '' : 'none'; }
+    if (hDiv)    { hDiv.style.display    = showHousing ? '' : 'none'; }
+
+    // reveal stations progressively by opening year
+    // chapter 0 = none, 1 = ≤2009, 2 = ≤2009, 3 = ≤2021, 4 = ≤2024, 5+ = all
+    const stationYearThreshold = [null, 2009, 2009, 2021, 2024, 2025, 2025, 2025][index] || null;
+    if (map.getLayer && map.getLayer('stations-circle')) {
+      if (stationYearThreshold === null) {
+        map.setFilter('stations-circle', ['==', ['get','year'], -1]); // hide all
+        map.setFilter('stations-halo',   ['==', ['get','year'], -1]);
+      } else {
+        map.setFilter('stations-circle', ['<=', ['get','year'], stationYearThreshold]);
+        map.setFilter('stations-halo',   ['<=', ['get','year'], stationYearThreshold]);
+      }
+    }
+
+    // update label
+    mapLabel.textContent = cfg.label;
+  }
+
+  // Build a lookup from chapter id → chapters array index
+  const chapterIdToIndex = {};
+  chapters.forEach((c, i) => { chapterIdToIndex[c.id] = i; });
+
+  // IntersectionObserver for chapter activation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const chId = entry.target.id;           // e.g. 'chapter-5b'
+        const idx  = chapterIdToIndex[chId];
+        if (idx !== undefined) setActiveChapter(idx);
+      }
+    });
+  }, { threshold: 0.45 });
+
+  chapterEls.forEach(el => observer.observe(el));
+
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = Math.min(100, (scrollTop / docHeight) * 100) + '%';
+  });
+
+  // ── RENT CHART ──────────────────────────────────────────────────────
+  // Data: avg 1-BR rent by year for 4 neighborhoods.
+  // Sources: ACS 5-yr estimates; CoStar/BERK via Seattle One Seattle Plan EIS (2023);
+  // Apartment List neighborhood rent reports 2015-2023.
+  // Rail opening annotations from Sound Transit.
+  const rentData = {
+    years:  [2009, 2011, 2013, 2015, 2016, 2017, 2018, 2019, 2021, 2023],
+    series: [
+      { label: 'Capitol Hill',   color: '#4a90d9', values: [1050, 1150, 1320, 1620, 1750, 1820, 1950, 1980, 1900, 2100] },
+      { label: 'Beacon Hill',    color: '#6abf69', values: [820,  880,  960,  1100, 1200, 1300, 1400, 1450, 1380, 1600] },
+      { label: 'U District',     color: '#e8b84b', values: [900,  960,  1050, 1280, 1350, 1420, 1500, 1550, 1480, 1750] },
+      { label: 'Rainier Valley', color: '#a78bfa', values: [750,  800,  880,  1020, 1100, 1200, 1280, 1320, 1250, 1480] },
+    ],
+    // rail openings to annotate: [year, label]
+    events: [
+      [2009, 'Central Link'],
+      [2016, 'Capitol Hill Stn'],
+      [2021, 'Northgate Ext'],
+    ]
+  };
+
+  function drawRentChart() {
+    const canvas = document.getElementById('rent-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.offsetWidth, H = canvas.offsetHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+
+    const PAD = { top: 10, right: 12, bottom: 28, left: 38 };
+    const cW = W - PAD.left - PAD.right;
+    const cH = H - PAD.top  - PAD.bottom;
+
+    const allVals = rentData.series.flatMap(s => s.values);
+    const minV = Math.min(...allVals) * 0.92;
+    const maxV = Math.max(...allVals) * 1.04;
+
+    const xScale = i => PAD.left + (i / (rentData.years.length - 1)) * cW;
+    const yScale = v => PAD.top + cH - ((v - minV) / (maxV - minV)) * cH;
+
+    // grid lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 1;
+    [1000, 1250, 1500, 1750, 2000].forEach(v => {
+      if (v < minV || v > maxV) return;
+      const y = yScale(v);
+      ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(PAD.left + cW, y); ctx.stroke();
+      ctx.fillStyle = 'rgba(138,143,153,0.6)';
+      ctx.font = `${8 * dpr / dpr}px DM Mono, monospace`;
+      ctx.fillText('$' + v.toLocaleString(), 2, y + 3);
+    });
+
+    // rail event lines
+    rentData.events.forEach(([yr, lbl]) => {
+      const i = rentData.years.indexOf(yr);
+      if (i < 0) return;
+      const x = xScale(i);
+      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = 'rgba(232,184,75,0.45)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, PAD.top); ctx.lineTo(x, PAD.top + cH); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(232,184,75,0.65)';
+      ctx.font = '7px DM Mono, monospace';
+      ctx.save(); ctx.translate(x + 3, PAD.top + cH - 4); ctx.rotate(-Math.PI / 2);
+      ctx.fillText(lbl, 0, 0); ctx.restore();
+    });
+
+    // series lines + dots
+    rentData.series.forEach(s => {
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      s.values.forEach((v, i) => {
+        const x = xScale(i), y = yScale(v);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      s.values.forEach((v, i) => {
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(xScale(i), yScale(v), 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    });
+
+    // x-axis year labels
+    ctx.fillStyle = 'rgba(138,143,153,0.8)';
+    ctx.font = '7.5px DM Mono, monospace';
+    ctx.textAlign = 'center';
+    rentData.years.forEach((yr, i) => {
+      if (i % 2 === 0 || i === rentData.years.length - 1) {
+        ctx.fillText(yr, xScale(i), PAD.top + cH + 14);
+      }
+    });
+  }
+
+  // Draw once map is loaded and again on resize
+  setTimeout(drawRentChart, 800);
+  window.addEventListener('resize', drawRentChart);
+
+  // ── BEFORE / AFTER BAR CHART ────────────────────────────────────────
+  const baNeighborhoods = [
+    { label: 'Capitol Hill',   before: 1050, after: 2100, color: '#4a90d9', event: '2016' },
+    { label: 'Beacon Hill',    before: 820,  after: 1600, color: '#6abf69', event: '2009' },
+    { label: 'U District',     before: 900,  after: 1750, color: '#e8b84b', event: '2021' },
+    { label: 'Rainier Valley', before: 750,  after: 1480, color: '#a78bfa', event: '2009' },
+  ];
+
+  function drawBACanvas(canvasId, key) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.offsetWidth, H = canvas.offsetHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+
+    const maxVal = Math.max(...baNeighborhoods.map(n => n.after)) * 1.08;
+    const PAD = { top: 16, right: 8, bottom: 32, left: 8 };
+    const cW = W - PAD.left - PAD.right;
+    const cH = H - PAD.top  - PAD.bottom;
+    const barW = cW / baNeighborhoods.length;
+
+    const bg = key === 'before' ? '#0d1520' : '#0a1a10';
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // title
+    ctx.fillStyle = key === 'before' ? 'rgba(138,143,153,0.9)' : 'rgba(232,184,75,0.9)';
+    ctx.font = 'bold 9px DM Mono, monospace';
+    ctx.textAlign = 'left';
+
+    baNeighborhoods.forEach((n, i) => {
+      const val = n[key];
+      const barH = (val / maxVal) * cH;
+      const x = PAD.left + i * barW + barW * 0.15;
+      const bW = barW * 0.7;
+      const y = PAD.top + cH - barH;
+
+      // bar
+      ctx.fillStyle = n.color + (key === 'before' ? '88' : 'cc');
+      ctx.fillRect(x, y, bW, barH);
+
+      // value label
+      ctx.fillStyle = '#f5f0e8';
+      ctx.font = 'bold 8.5px DM Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('$' + val.toLocaleString(), x + bW / 2, y - 4);
+
+      // neighborhood label
+      ctx.fillStyle = 'rgba(138,143,153,0.8)';
+      ctx.font = '7px DM Mono, monospace';
+      const words = n.label.split(' ');
+      words.forEach((w, wi) => {
+        ctx.fillText(w, x + bW / 2, PAD.top + cH + 10 + wi * 9);
       });
 
-      // 7. Trigger operations inside of the the ()=> {} funciton while loading the map.
-      map.on('load', () => {
+      // % change badge (after side only)
+      if (key === 'after') {
+        const pct = Math.round(((n.after - n.before) / n.before) * 100);
+        ctx.fillStyle = 'rgba(232,184,75,0.9)';
+        ctx.font = 'bold 7.5px DM Mono, monospace';
+        ctx.fillText('+' + pct + '%', x + bW / 2, y - 14);
+      }
+    });
+  }
 
-        // 8. add map source and declare layers.
-        map.addSource('LightRailStations-src', {
-          type: 'geojson',
-          data: LightRailGeoJSON
-        });
+  function initBeforeAfter() {
+    const wrap = document.getElementById('ba-wrap');
+    if (!wrap) return;
 
-        /*const LightRailGeoJSON = {
-          type: "FeatureCollection",
-          features: LightRailData.map(d => {
-            const dYear = parseInt(d.date.split("/")[2], 10); // extract year
-            return {
-              type: "Feature",
-              properties: { name: d.name, date: d.date, year: dYear },
-              geometry: { type: "Point", coordinates: [d.lng, d.lat] }
-            };
-          })
-        };*/
+    drawBACanvas('ba-before-canvas', 'before');
+    drawBACanvas('ba-after-canvas', 'after');
 
-        LightRailLayer = {
-          id: 'LightRail-Points',
-          type: 'circle',
-          source: 'LightRailStations-src',
-          paint: {
-            'circle-color': 'green',
-            'circle-radius': 6,
-            'circle-opacity': 0.9
-          }
-        };
+    let dragging = false;
+    let pct = 50;
 
-        map.addLayer(LightRailLayer);
+    function setPos(p) {
+      pct = Math.max(5, Math.min(95, p));
+      const afterSide = document.getElementById('ba-after-side');
+      const divider   = document.getElementById('ba-divider');
+      const handle    = document.getElementById('ba-handle');
+      afterSide.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
+      divider.style.left = pct + '%';
+      handle.style.left  = pct + '%';
+    }
 
-        // 9. Initialize the script panel
-        scriptPanel
-          .setup({
-            step: ".scene", // all the scenes.
-            offset: 0.33, // the location of the enter and exit trigger
-            debug: false // toggler on or off the debug mode.
-          })
-          .onStepEnter(handleSceneEnter)
-          .onStepExit(handleSceneExit);
-        
-        // 10. This function performs when a scene enters the storyboard
-        function handleSceneEnter(response) {
+    function getXPct(e) {
+      const rect = wrap.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      return ((clientX - rect.left) / rect.width) * 100;
+    }
 
-          var index = response.index; // capture the id of the current scene. 
-          
-          // 1st scene: 2009 Link Stations
-          if (index === 0) { 
-            if (typeof (map.getSource('LightRailStations-src')) == 'undefined') {
-              map.addSource('LightRailStations-src', {
-                type: 'geojson',
-                data: LightRailGeoJSON
-              });
-            } else {
-              map.getSource('LightRailStations-src').setData(LightRailGeoJSON);
+    wrap.addEventListener('mousedown',  e => { dragging = true; setPos(getXPct(e)); });
+    wrap.addEventListener('touchstart', e => { dragging = true; setPos(getXPct(e)); }, { passive: true });
+    window.addEventListener('mousemove',  e => { if (dragging) setPos(getXPct(e)); });
+    window.addEventListener('touchmove',  e => { if (dragging) setPos(getXPct(e)); }, { passive: true });
+    window.addEventListener('mouseup',  () => dragging = false);
+    window.addEventListener('touchend', () => dragging = false);
 
-            }
+    setPos(50);
+  }
 
-            if (!map.getLayer("LightRail-Points")) {
-              map.addLayer(LightRailLayer);
-            }
-            map.setFilter('LightRail-Points', ['==', ['get', 'year'], 2009]);
+  setTimeout(initBeforeAfter, 900);
+  window.addEventListener('resize', () => {
+    drawBACanvas('ba-before-canvas', 'before');
+    drawBACanvas('ba-after-canvas', 'after');
+  });
 
-            document.getElementById("cover").style.visibility = "hidden"; // Hide the cover page
-          
-            // 2nd scene: 2016 
-          } else if (index === 1) { 
-            /*map.flyTo({
-              center: [-122.4121036, 47.6131229],
-              zoom: 12,
-              pitch: 0,
-              speed: 0.5
-
-            });*/
-
-            if (typeof (map.getSource('LightRailStations-src')) == 'undefined') {
-              map.addSource('LightRailStations-src', {
-                type: 'geojson',
-                data: LightRailGeoJSON
-              });
-            } else {
-              map.getSource('LightRailStations-src').setData(LightRailGeoJSON);
-
-            }
-
-            if (!map.getLayer("LightRail-Points")) {
-              map.addLayer(LightRailLayer);
-            }
-
-            map.setFilter('LightRail-Points', [
-              "any",
-              ["==", ["get", "year"], 2009],
-              ["==", ["get", "year"], 2016] // add 3 stations
-            ]);
-
-            //  3rd scene: 2021
-          } else if (index === 2) {
-            /*map.flyTo({
-              center: [-122.4121036, 47.6131229],
-              zoom: 12,
-              pitch: 0,
-              speed: 0.5
-
-            });*/
-
-            if (typeof (map.getSource('LightRailStations-src')) == 'undefined') {
-              map.addSource('LightRailStations-src', {
-                type: 'geojson',
-                data: LightRailGeoJSON
-              });
-            } else {
-              map.getSource('LightRailStations-src').setData(LightRailGeoJSON);
-
-            }
-
-            if (!map.getLayer("LightRail-Points")) {
-              map.addLayer(LightRailLayer);
-            }
-            map.setFilter('LightRail-Points', [
-              "any",
-              ["==", ["get", "year"], 2009],
-              ["==", ["get", "year"], 2016],
-              ["==", ["get", "year"], 2021] // add 3 stations
-            ]);
-
-            // 4th scene: 2024 
-          } else if (index === 3) {
-
-            if (typeof (map.getSource('LightRailStations-src')) == 'undefined') {
-              map.addSource('LightRailStations-src', {
-                type: 'geojson',
-                data: LightRailGeoJSON
-              });
-            } else {
-              map.getSource('LightRailStations-src').setData(LightRailGeoJSON);
-
-            }
-
-            if (!map.getLayer("LightRail-Points")) {
-              map.addLayer(LightRailLayer);
-            }
-            map.setFilter('LightRail-Points', [
-              "any",
-              ["==", ["get", "year"], 2009],
-              ["==", ["get", "year"], 2016],
-              ["==", ["get", "year"], 2021],
-              ["==", ["get", "year"], 2024] // add 4 stations
-            ]);
-
-            // 5th scene: 2025
-          } else if (index === 4) {
-
-            if (typeof (map.getSource('LightRailStations-src')) == 'undefined') {
-              map.addSource('LightRailStations-src', {
-                type: 'geojson',
-                data: LightRailGeoJSON
-              });
-            } else {
-              map.getSource('LightRailStations-src').setData(LightRailGeoJSON);
-
-            }
-
-            if (!map.getLayer("LightRail-Points")) {
-              map.addLayer(LightRailLayer);
-            }
-            map.setFilter('LightRail-Points', [
-              "any",
-              ["==", ["get", "year"], 2009],
-              ["==", ["get", "year"], 2016],
-              ["==", ["get", "year"], 2021],
-              ["==", ["get", "year"], 2024],
-              ["==", ["get", "year"], 2025] // add 3 stations
-            ]);
-                        
-          }
-        }
-
-        // 11. This function performs when a scene exists the storyboard
-        function handleSceneExit(response) {
-          var index = response.index;
-
-          if (index === 0) {
-            if (response.direction == 'down') { 
-              document.getElementById("cover").style.visibility = "hidden"; // when you scroll down, the cover page will be hided.
-            } else {
-              document.getElementById("cover").style.visibility = "visible"; // when you scroll up, the cover page will be shown.
-            }
-            if (response.direction == 'up') { 
-              map.setFilter('LightRail-Points', null); // shows all stations before scene 1
-            }
-          } 
-        }
-
-      });
-
-    };
-
-    // 5 call the data loading function.
-    geojsonFetch();
-  </script>
+</script>
 </body>
-
 </html>
