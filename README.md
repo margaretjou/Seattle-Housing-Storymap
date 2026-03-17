@@ -4,7 +4,7 @@
 
 An interactive, scroll-driven narrative map tracing the construction of Sound Transit's Link Light Rail system, its role in catalyzing transit-oriented development (TOD), and the housing growth — and displacement pressures — that have followed in its wake.
 
-**Live site:** [Tracks to Tomorrow](https://margaretjou.github.io/Seattle-Housing-Storymap/)
+**Live site:** https://margaretjou.github.io/Seattle-Housing-Storymap/
 
 ---
 
