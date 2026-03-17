@@ -629,3 +629,45 @@ h1 span.accent { color: var(--signal); }
   #scroll-pane   { width: 100%; padding: 4vh 1.5rem 12vh 2.8rem; }
   #hero { padding: 2rem; }
 }
+
+/* ── CREDITS ──────────────────────────────────────────────────── */
+.credits {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(245, 240, 232, 0.1);
+  text-align: center;
+}
+
+.credits-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--concrete);
+  margin-bottom: 1rem;
+}
+
+.credits-names {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 2.5rem;
+}
+
+.credits-names span {
+  font-family: var(--body);
+  font-weight: 300;
+  font-size: 1rem;
+  color: rgba(245, 240, 232, 0.65);
+  letter-spacing: 0.03em;
+}
+
+.credits-thanks {
+  margin-top: 1.25rem;
+  font-family: var(--body);
+  font-weight: 300;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: rgba(245, 240, 232, 0.35);
+  letter-spacing: 0.02em;
+}
