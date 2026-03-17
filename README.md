@@ -34,7 +34,7 @@ The map walks through seven chapters:
 
 | Dataset | Source | File |
 |---------|--------|------|
-| Light Rail Stations | Sound Transit (via project CSV) | `LightRails.csv` |
+| Light Rail Stations | Sound Transit (via project CSV) | `LightRails.geojson` |
 | Multifamily Housing Permits | Seattle Department of Construction & Inspections | `Seattle_Housing_Dataset_cleaned_v1.csv` |
 | Rail line geometry | Digitized from Sound Transit system maps | Embedded in `index.html` |
 
