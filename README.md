@@ -1,11 +1,15 @@
 # 🚆 Tracks to Tomorrow
+
 ### A Scrollytelling Story Map of Seattle's Link Light Rail
 
 An interactive, scroll-driven narrative map tracing the construction of Sound Transit's Link Light Rail system, its role in catalyzing transit-oriented development (TOD), and the housing growth — and displacement pressures — that have followed in its wake.
 
-**Live site:** 
+**Live site:** [Tracks to Tomorrow](https://margaretjou.github.io/Seattle-Housing-Storymap/)
 
 ---
+
+## AI Disclosure
+AI was used in this project for debugging. AI was not used to write or complete any components where AI use is prohibited. All debugging related code and decisions can be explained. 
 
 ## About the Project
 
@@ -120,3 +124,9 @@ Station_Name, Date_Opened, Latitude, Longitude
 ```
 
 If you add new stations, re-run the data embedding step or manually update the `stationsGeoJSON` object in `index.html`.
+
+## Team Members
+- Macklin Farrell 
+- Margaret Jou
+- Chae Won Yoo 
+- Yeabkal Shewangezaw
